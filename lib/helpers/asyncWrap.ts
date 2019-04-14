@@ -13,7 +13,7 @@ export const asyncWrap = (wss: WebSocket.Server) => ({
   },
   closeAsync: async () => {
     await new Promise((resolve, reject) => {
-      wss.close((err) => err ? reject(err) : resolve())
+      wss.close((err) => (err ? reject(err) : resolve()))
     })
-  }
+  },
 })

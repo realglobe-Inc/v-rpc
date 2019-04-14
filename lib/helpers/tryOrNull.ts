@@ -1,6 +1,6 @@
 const tryOrNull = (cb: () => any) => {
   try {
-    return cb()    
+    return cb()
   } catch (e) {
     return null
   }

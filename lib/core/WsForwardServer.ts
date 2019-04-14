@@ -1,8 +1,12 @@
 import * as WebSocket from 'ws'
-import { asyncWrap } from '../helpers/asyncWrap';
-import { ServiceIdNotificationPayload, RequestPayload, ResponsePayload } from './Payload';
-import { ServiceStore } from './ServiceStore';
-import { WsService } from './WsService';
+import { asyncWrap } from '../helpers/asyncWrap'
+import {
+  ServiceIdNotificationPayload,
+  RequestPayload,
+  ResponsePayload,
+} from './Payload'
+import { ServiceStore } from './ServiceStore'
+import { WsService } from './WsService'
 import Debug from 'debug'
 
 const debug = Debug('v-forward:server')
@@ -23,11 +27,14 @@ class Server {
     if (!this.wss) {
       throw new Error(`No WebSocket server`)
     }
-    await asyncWrap(this.wss!).closeAsync()
+    await asyncWrap(this.wss).closeAsync()
     this.wss = null
   }
 
-  async requestForService(serviceId: string, req: RequestPayload): Promise<ResponsePayload> {
+  async requestForService(
+    serviceId: string,
+    req: RequestPayload,
+  ): Promise<ResponsePayload> {
     const service = this.serviceStore.get(serviceId)
     if (!service) {
       throw new Error(`Service "${serviceId}" not found`)
@@ -66,9 +73,11 @@ class Server {
   private async waitServiceId(ws: WebSocket) {
     // TODO: Reject timeout
     return new Promise((resolve: (serviceId: string) => void, reject) => {
-      function onMessage (data: any) {
+      function onMessage(data: any) {
         if (typeof data !== 'string') {
-          reject(`Invalid message data type for the first message: ${typeof data}`)
+          reject(
+            `Invalid message data type for the first message: ${typeof data}`,
+          )
           return
         }
 
@@ -78,7 +87,11 @@ class Server {
           return
         }
 
-        const isValid = json.type === 'notification' && json.notificationType == 'serviceId' && json.payload && json.payload.serviceId
+        const isValid =
+          json.type === 'notification' &&
+          json.notificationType === 'serviceId' &&
+          json.payload &&
+          json.payload.serviceId
         if (!isValid) {
           reject(`Invalid message data for the first message: ${data}`)
           return
@@ -89,7 +102,7 @@ class Server {
         resolve(notification.payload.serviceId)
       }
 
-      ws.addEventListener('message', onMessage) 
+      ws.addEventListener('message', onMessage)
     })
   }
 }

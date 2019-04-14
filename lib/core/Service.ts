@@ -1,6 +1,6 @@
-import { RequestPayload, ResponsePayload } from './Payload';
+import { RequestPayload, ResponsePayload } from './Payload'
 
 export interface Service {
-  id: string;
+  id: string
   call: (arg: RequestPayload) => Promise<ResponsePayload>
 }

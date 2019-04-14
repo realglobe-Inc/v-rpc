@@ -18,24 +18,26 @@ export interface NotificationPayload {
 export interface ServiceIdNotificationPayload extends NotificationPayload {
   notificationType: 'serviceId'
   payload: {
-    serviceId: string
+    serviceId: string,
   }
 }
 
 export const createRequest = (req: Payload): RequestPayload => ({
   ...req,
-  type: 'req'
+  type: 'req',
 })
 
 export const createResponse = (res: Payload): ResponsePayload => ({
   ...res,
-  type: 'res'
+  type: 'res',
 })
 
-export const createIdNotification = (serviceId: string): ServiceIdNotificationPayload => ({
+export const createIdNotification = (
+  serviceId: string,
+): ServiceIdNotificationPayload => ({
   type: 'notification',
   notificationType: 'serviceId',
   payload: {
-    serviceId
-  }
+    serviceId,
+  },
 })
