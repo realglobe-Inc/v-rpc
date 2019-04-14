@@ -1,0 +1,22 @@
+{
+  "extends": [
+    "tslint-config-standard",
+    "tslint-config-prettier"
+  ],
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ],
+  "rules": {
+    "prettier": true,
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "no-default-export": true,
+    "return-undefined": false,
+    "origin-ordered-imports": [ true, "one-blank-line" ]
+  }
+}
