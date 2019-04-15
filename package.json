@@ -4,7 +4,7 @@
   "description": "RPC forwarding server",
   "main": "lib",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -r ts-node/register test/**/*.test.ts"
   },
   "repository": {
     "type": "git",
@@ -20,17 +20,27 @@
   },
   "homepage": "https://github.com/realglobe-Inc/v-forward#readme",
   "dependencies": {
+    "@types/koa": "^2.0.48",
     "debug": "^4.1.1",
+    "koa": "^2.7.0",
+    "uuid": "^3.3.2",
     "ws": "^6.2.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.3",
+    "@types/get-port": "^4.2.0",
+    "@types/mocha": "^5.2.6",
+    "@types/uuid": "^3.4.4",
     "@types/ws": "^6.0.1",
+    "get-port": "^5.0.0",
+    "mocha": "^6.1.3",
     "prettier": "^1.16.4",
+    "ts-node": "^8.0.3",
     "tslint": "^5.15.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^8.0.1",
     "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.4.2"
+    "typescript": "^3.4.2",
+    "waait": "^1.0.4"
   }
 }

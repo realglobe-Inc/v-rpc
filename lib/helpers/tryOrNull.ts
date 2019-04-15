@@ -1,4 +1,4 @@
-const tryOrNull = (cb: () => any) => {
+export const tryOrNull = (cb: () => any) => {
   try {
     return cb()
   } catch (e) {

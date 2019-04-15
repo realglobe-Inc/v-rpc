@@ -5,6 +5,8 @@
     "module": "commonjs",
     "target": "es6",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "sourceMap": true
@@ -15,5 +17,8 @@
   ],
   "include": [
     "lib"
+  ],
+  "types": [
+    "mocha"
   ]
 }

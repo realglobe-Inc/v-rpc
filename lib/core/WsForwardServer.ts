@@ -1,17 +1,18 @@
-import * as WebSocket from 'ws'
-import { asyncWrap } from '../helpers/asyncWrap'
+import WebSocket from 'ws'
+import { asyncWrapWss } from '../helpers/asyncWrap'
 import {
   ServiceIdNotificationPayload,
   RequestPayload,
   ResponsePayload,
 } from './Payload'
 import { ServiceStore } from './ServiceStore'
-import { WsService } from './WsService'
+import { WsServiceProxy } from './WsServiceProxy'
+import { tryOrNull } from '../helpers/tryOrNull'
 import Debug from 'debug'
 
 const debug = Debug('v-forward:server')
 
-class Server {
+export class WsForwardServer {
   wss: WebSocket.Server | null = null
   serviceStore = new ServiceStore()
 
@@ -20,14 +21,14 @@ class Server {
     this.wss = wss
     wss.on('connection', this.onConnection)
     wss.on('error', this.onError)
-    await asyncWrap(wss).waitListening()
+    await asyncWrapWss(wss).waitListening()
   }
 
   async close() {
     if (!this.wss) {
       throw new Error(`No WebSocket server`)
     }
-    await asyncWrap(this.wss).closeAsync()
+    await asyncWrapWss(this.wss).closeAsync()
     this.wss = null
   }
 
@@ -43,13 +44,9 @@ class Server {
     return res
   }
 
-  async existsService(serviceId: string) {
-    return Boolean(this.serviceStore.get(serviceId))
-  }
-
   private onConnection = async (ws: WebSocket) => {
     const serviceId = await this.waitServiceId(ws)
-    const service = new WsService(serviceId, ws)
+    const service = new WsServiceProxy(serviceId, ws)
 
     this.serviceStore.set(service)
 
@@ -88,23 +85,20 @@ class Server {
         }
 
         const isValid =
-          json.type === 'notification' &&
-          json.notificationType === 'serviceId' &&
+          json.type === 'notification:serviceId' &&
           json.payload &&
-          json.payload.serviceId
+          typeof json.payload === 'string'
         if (!isValid) {
           reject(`Invalid message data for the first message: ${data}`)
           return
         }
 
-        ws.removeEventListener('message', onMessage)
         const notification = json as ServiceIdNotificationPayload
-        resolve(notification.payload.serviceId)
+        const serviceId = notification.payload
+        resolve(serviceId)
       }
 
-      ws.addEventListener('message', onMessage)
+      ws.once('message', onMessage)
     })
   }
 }
-
-export default Server

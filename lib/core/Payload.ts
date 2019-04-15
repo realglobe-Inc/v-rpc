@@ -1,43 +1,23 @@
+type PayloadType = 'req' | 'res' | 'notification:serviceId'
+
 interface Payload {
-  id: string
+  id: string | null
   payload: string
+  type: PayloadType
 }
 
 export interface RequestPayload extends Payload {
+  id: string
   type: 'req'
 }
 
 export interface ResponsePayload extends Payload {
+  id: string
   type: 'res'
 }
 
-export interface NotificationPayload {
-  type: 'notification'
+export interface ServiceIdNotificationPayload extends Payload {
+  id: null
+  type: 'notification:serviceId'
+  payload: string
 }
-
-export interface ServiceIdNotificationPayload extends NotificationPayload {
-  notificationType: 'serviceId'
-  payload: {
-    serviceId: string,
-  }
-}
-
-export const createRequest = (req: Payload): RequestPayload => ({
-  ...req,
-  type: 'req',
-})
-
-export const createResponse = (res: Payload): ResponsePayload => ({
-  ...res,
-  type: 'res',
-})
-
-export const createIdNotification = (
-  serviceId: string,
-): ServiceIdNotificationPayload => ({
-  type: 'notification',
-  notificationType: 'serviceId',
-  payload: {
-    serviceId,
-  },
-})
