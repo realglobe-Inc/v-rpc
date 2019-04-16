@@ -21,3 +21,19 @@ export interface ServiceIdNotificationPayload extends Payload {
   type: 'notification:serviceId'
   payload: string
 }
+
+export const isRequestPayload = (payload: any) =>
+  payload &&
+  payload.id &&
+  payload.type === 'req' &&
+  typeof payload.payload === 'string'
+export const isResponsePayload = (payload: any) =>
+  payload &&
+  payload.id &&
+  payload.type === 'res' &&
+  typeof payload.payload === 'string'
+export const isServiceIdNotificationPayload = (payload: any) =>
+  payload &&
+  payload.id === null &&
+  payload.type === 'notification:serviceId' &&
+  typeof payload.payload === 'string'
