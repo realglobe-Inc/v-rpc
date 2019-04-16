@@ -54,7 +54,7 @@ describe('WsForwardServer', function() {
       type: 'req',
       payload: 'hello',
     }
-    const resp = await server.requestForService('service01', request)
+    const resp = await server.serviceStore.get('service01').call(request)
     assert.deepStrictEqual(resp, {
       id: request.id,
       type: 'res',

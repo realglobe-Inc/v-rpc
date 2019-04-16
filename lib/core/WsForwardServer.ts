@@ -9,6 +9,7 @@ import { ServiceStore } from './ServiceStore'
 import { WsServiceProxy } from './WsServiceProxy'
 import { tryOrNull } from '../helpers/tryOrNull'
 import Debug from 'debug'
+import { Server } from 'http'
 
 const debug = Debug('v-forward:server')
 
@@ -16,7 +17,19 @@ export class WsForwardServer {
   wss: WebSocket.Server | null = null
   serviceStore = new ServiceStore()
 
+  constructor(options: { server?: Server } = {}) {
+    if (options.server) {
+      const wss = new WebSocket.Server({ server: options.server })
+      wss.on('connection', this.onConnection)
+      wss.on('error', this.onError)
+      this.wss = wss
+    }
+  }
+
   async listen(port: number) {
+    if (this.wss) {
+      throw new Error(`Wss already exists`)
+    }
     const wss = new WebSocket.Server({ port })
     this.wss = wss
     wss.on('connection', this.onConnection)
@@ -30,18 +43,6 @@ export class WsForwardServer {
     }
     await asyncWrapWss(this.wss).closeAsync()
     this.wss = null
-  }
-
-  async requestForService(
-    serviceId: string,
-    req: RequestPayload,
-  ): Promise<ResponsePayload> {
-    const service = this.serviceStore.get(serviceId)
-    if (!service) {
-      throw new Error(`Service "${serviceId}" not found`)
-    }
-    const res = await service.call(req)
-    return res
   }
 
   private onConnection = async (ws: WebSocket) => {

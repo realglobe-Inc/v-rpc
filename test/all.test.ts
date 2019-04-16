@@ -1,14 +1,15 @@
 import { strict as assert } from 'assert'
 import getPort from 'get-port'
 import wait from 'waait'
-import { WsForwardServer } from '../lib/core/WsForwardServer'
+import fetch from 'node-fetch'
 import { ServiceClient } from '../lib/ServiceClient'
+import { Server } from '../lib/Server'
 
 describe('all', function() {
   this.timeout(10000)
 
-  it('WsForwardServer and ServiceClient / case 01', async () => {
-    const server = new WsForwardServer()
+  it('case 01', async () => {
+    const server = new Server()
     const port = await getPort()
     await server.listen(port)
 
@@ -20,9 +21,10 @@ describe('all', function() {
       method: (arg: string) => Promise.resolve(arg + arg),
     })
     await service.connect()
-    await wait(50)
+    await wait(30)
 
-    const response = await server.requestForService(serviceId, {
+    const serviceProxy = server.forwarder.serviceStore.get(serviceId)
+    const response = await serviceProxy.call({
       id: 'method01',
       type: 'req',
       payload: 'hello',
@@ -32,6 +34,29 @@ describe('all', function() {
       type: 'res',
       payload: 'hellohello',
     })
+    await server.close()
+  })
+
+  it('case 02', async () => {
+    const server = new Server()
+    const port = await getPort()
+    await server.listen(port)
+
+    const serviceId = 'service01'
+    const service = new ServiceClient({
+      url: `http://localhost:${port}`,
+      serviceId,
+      method: (arg: string) => Promise.resolve(arg + arg),
+    })
+    await service.connect()
+    await wait(30)
+
+    const resp = await fetch(`http://localhost:${port}/services/${serviceId}`, {
+      method: 'POST',
+      body: 'hello',
+    })
+    const result = await resp.text()
+    assert.strictEqual(result, 'hellohello')
     await server.close()
   })
 })
