@@ -1,8 +1,8 @@
 import WebSocket from 'ws'
 import { strict as assert } from 'assert'
-import { WsServiceProxy } from '../lib/core/WsServiceProxy'
 import getPort from 'get-port'
 import uuid from 'uuid'
+import { WsServiceProxy } from '../lib/core/ServiceProxy'
 import { ResponsePayload } from '../lib/core/Payload'
 import { asyncWrapWss } from '../lib/helpers/asyncWrap'
 

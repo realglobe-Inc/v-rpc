@@ -1,7 +1,7 @@
 import WebSocket from 'ws'
 import wait from 'waait'
 import { strict as assert } from 'assert'
-import { WsForwardServer } from '../lib/core/WsForwardServer'
+import { ServiceForwarder } from '../lib/core/ServiceForwarder'
 import getPort from 'get-port'
 import uuid from 'uuid'
 import { asyncWrapWs } from '../lib/helpers/asyncWrap'
@@ -14,10 +14,10 @@ import {
 describe('WsForwardServer', function() {
   this.timeout(10000)
   let port: number
-  let server: WsForwardServer
+  let server: ServiceForwarder
 
   beforeEach(async () => {
-    server = new WsForwardServer()
+    server = new ServiceForwarder()
     port = await getPort()
     await server.listen(port)
   })

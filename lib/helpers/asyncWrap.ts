@@ -23,6 +23,9 @@ export const asyncWrapWss = (wss: WebSocket.Server) => ({
   },
 })
 
+/**
+ * Wrap ws methods as async methods
+ */
 export const asyncWrapWs = (ws: WebSocket) => ({
   waitOpen: async () => {
     return new Promise((resolve) => {

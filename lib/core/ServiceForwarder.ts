@@ -1,19 +1,14 @@
 import WebSocket from 'ws'
 import { asyncWrapWss } from '../helpers/asyncWrap'
-import {
-  ServiceIdNotificationPayload,
-  RequestPayload,
-  ResponsePayload,
-} from './Payload'
+import { ServiceIdNotificationPayload } from './Payload'
 import { ServiceStore } from './ServiceStore'
-import { WsServiceProxy } from './WsServiceProxy'
-import { tryOrNull } from '../helpers/tryOrNull'
+import { WsServiceProxy } from './ServiceProxy'
 import Debug from 'debug'
 import { Server } from 'http'
 
 const debug = Debug('v-forward:server')
 
-export class WsForwardServer {
+export class ServiceForwarder {
   wss: WebSocket.Server | null = null
   serviceStore = new ServiceStore()
 
@@ -79,7 +74,12 @@ export class WsForwardServer {
           return
         }
 
-        const json = tryOrNull(() => JSON.parse(data))
+        let json = null as any
+        try {
+          json = JSON.parse(data)
+        } catch (e) {
+          // Do nothing
+        }
         if (!json) {
           reject(`JSON parse error: ${data}`)
           return

@@ -2,14 +2,14 @@ import http from 'http'
 import Koa, { Context } from 'koa'
 import Router from 'koa-router'
 import getRawBoy from 'raw-body'
-import { WsForwardServer } from './core/WsForwardServer'
+import { ServiceForwarder } from './core/ServiceForwarder'
 import uuid = require('uuid')
 import { RequestPayload } from './core/Payload'
 
 export class Server {
   server: http.Server
   app: Koa
-  forwarder: WsForwardServer
+  forwarder: ServiceForwarder
 
   constructor() {
     const app = new Koa()
@@ -17,7 +17,7 @@ export class Server {
     app.use(this.createRoutes())
     this.server = server
     this.app = app
-    this.forwarder = new WsForwardServer({ server })
+    this.forwarder = new ServiceForwarder({ server })
   }
 
   async listen(port: number) {

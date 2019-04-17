@@ -1,1 +1,2 @@
-export default (str: string) => str + str
+export * from './Server'
+export * from './ServiceClient'
