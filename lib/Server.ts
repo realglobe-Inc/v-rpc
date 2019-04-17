@@ -3,34 +3,29 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import { ServiceForwarder } from './core/ServiceForwarder'
 import { createEndpoints } from './core/Endpoint'
+import { asyncHttp } from './helpers/asyncWrap'
 
 export class Server {
-  server: http.Server
+  http: http.Server
   app: Koa
   forwarder: ServiceForwarder
 
   constructor() {
     const app = new Koa()
     const server = http.createServer(app.callback())
-    this.server = server
+    this.http = server
     this.app = app
     this.forwarder = new ServiceForwarder({ server })
     app.use(this.createRoutes())
   }
 
   async listen(port: number) {
-    await new Promise((resolve) => {
-      this.server.listen(port, () => {
-        resolve()
-      })
-    })
+    await asyncHttp(this.http).listen(port)
   }
 
   async close() {
     await this.forwarder.close()
-    await new Promise((resolve, reject) => {
-      this.server.close((err) => (err ? reject(err) : resolve()))
-    })
+    await asyncHttp(this.http).close()
   }
 
   private createRoutes() {

@@ -1,4 +1,5 @@
 import WebSocket from 'ws'
+import { Server } from 'http'
 
 /**
  * Wrap wss methods as async methods
@@ -30,6 +31,21 @@ export const asyncWrapWs = (ws: WebSocket) => ({
   waitOpen: async () => {
     return new Promise((resolve) => {
       ws.once('open', () => resolve())
+    })
+  },
+})
+
+export const asyncHttp = (server: Server) => ({
+  listen: async (port: number) => {
+    return new Promise((resolve) => {
+      server.listen(port, () => {
+        resolve()
+      })
+    })
+  },
+  close: async () => {
+    return new Promise((resolve, reject) => {
+      server.close((err) => (err ? reject(err) : resolve()))
     })
   },
 })
