@@ -17,7 +17,7 @@ export const asyncWrapWss = (wss: WebSocket.Server) => ({
       wss.once('connection', (ws) => resolve(ws))
     })
   },
-  closeAsync: async () => {
+  close: async () => {
     await new Promise((resolve, reject) => {
       wss.close((err) => (err ? reject(err) : resolve()))
     })
@@ -31,6 +31,11 @@ export const asyncWrapWs = (ws: WebSocket) => ({
   waitOpen: async () => {
     return new Promise((resolve) => {
       ws.once('open', () => resolve())
+    })
+  },
+  send: async (data: any) => {
+    return new Promise((resolve, reject) => {
+      ws.send(data, (err?: Error) => (err ? reject(err) : resolve()))
     })
   },
 })

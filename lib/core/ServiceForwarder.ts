@@ -26,7 +26,7 @@ export class ServiceForwarder {
 
   async close() {
     if (this.wss) {
-      await asyncWrapWss(this.wss).closeAsync()
+      await asyncWrapWss(this.wss).close()
       this.wss = null
     }
   }

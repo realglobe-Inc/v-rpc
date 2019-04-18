@@ -53,7 +53,7 @@ export class ServiceClient {
         type: 'res',
         payload: result,
       }
-      ws.send(encodePayload(response))
+      await asyncWrapWs(ws).send(encodePayload(response))
     })
     this.ws = ws
   }

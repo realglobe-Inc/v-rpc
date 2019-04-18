@@ -29,6 +29,6 @@ describe('asyncWrap', function() {
     ])
     assert.ok(connection)
 
-    await asyncWrapWss(wss).closeAsync()
+    await asyncWrapWss(wss).close()
   })
 })
