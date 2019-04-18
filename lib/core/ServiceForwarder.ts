@@ -5,12 +5,14 @@ import { WsServiceProxy } from './ServiceProxy'
 import Debug from 'debug'
 import { Server, IncomingMessage } from 'http'
 import { SERVICE_ID_HEADER_NAME } from './Constants'
+import { wssConnectionDetector } from '../helpers/wsConnectDetector'
 
 const debug = Debug('v-forward:server')
 
 export class ServiceForwarder {
-  wss: WebSocket.Server | null = null
+  wss: WebSocket.Server
   serviceStore = new ServiceStore()
+  stopConnectionDetector: () => void
 
   constructor(
     options: {
@@ -21,14 +23,13 @@ export class ServiceForwarder {
     const wss = new WebSocket.Server(options)
     wss.on('connection', this.onConnection)
     wss.on('error', this.onError)
+    this.stopConnectionDetector = wssConnectionDetector(wss)
     this.wss = wss
   }
 
   async close() {
-    if (this.wss) {
-      await asyncWrapWss(this.wss).close()
-      this.wss = null
-    }
+    this.stopConnectionDetector()
+    await asyncWrapWss(this.wss).close()
   }
 
   private onConnection = async (ws: WebSocket, req: IncomingMessage) => {

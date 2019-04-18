@@ -8,6 +8,7 @@ import {
   encodePayload,
 } from './core/Payload'
 import { SERVICE_ID_HEADER_NAME } from './core/Constants'
+import { wsConnectionDetector } from './helpers/wsConnectDetector'
 
 export type ServiceMethod = (arg: string | Buffer) => Promise<string | Buffer>
 
@@ -37,7 +38,7 @@ export class ServiceClient {
         [SERVICE_ID_HEADER_NAME]: this.serviceId,
       },
     })
-    await asyncWrapWs(ws).waitOpen()
+    wsConnectionDetector(ws)
     ws.on('message', async (message: any) => {
       if (!Buffer.isBuffer(message)) {
         return
@@ -56,6 +57,7 @@ export class ServiceClient {
       await asyncWrapWs(ws).send(encodePayload(response))
     })
     this.ws = ws
+    await asyncWrapWs(ws).waitOpen()
   }
 
   close() {
