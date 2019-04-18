@@ -12,32 +12,23 @@ export class ServiceForwarder {
   wss: WebSocket.Server | null = null
   serviceStore = new ServiceStore()
 
-  constructor(options: { server?: Server } = {}) {
-    if (options.server) {
-      const wss = new WebSocket.Server({ server: options.server })
-      wss.on('connection', this.onConnection)
-      wss.on('error', this.onError)
-      this.wss = wss
-    }
-  }
-
-  async listen(port: number) {
-    if (this.wss) {
-      throw new Error(`Wss already exists`)
-    }
-    const wss = new WebSocket.Server({ port })
-    this.wss = wss
+  constructor(
+    options: {
+      server?: Server
+      verifyClient?: WebSocket.ServerOptions['verifyClient']
+    } = {},
+  ) {
+    const wss = new WebSocket.Server(options)
     wss.on('connection', this.onConnection)
     wss.on('error', this.onError)
-    await asyncWrapWss(wss).waitListening()
+    this.wss = wss
   }
 
   async close() {
-    if (!this.wss) {
-      throw new Error(`No WebSocket server`)
+    if (this.wss) {
+      await asyncWrapWss(this.wss).closeAsync()
+      this.wss = null
     }
-    await asyncWrapWss(this.wss).closeAsync()
-    this.wss = null
   }
 
   private onConnection = async (ws: WebSocket) => {

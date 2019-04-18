@@ -4,7 +4,8 @@ import { strict as assert } from 'assert'
 import { ServiceForwarder } from '../lib/core/ServiceForwarder'
 import getPort from 'get-port'
 import uuid from 'uuid'
-import { asyncWrapWs } from '../lib/helpers/asyncWrap'
+import http from 'http'
+import { asyncWrapWs, asyncHttp } from '../lib/helpers/asyncWrap'
 import {
   ResponsePayload,
   ServiceIdNotificationPayload,
@@ -14,16 +15,21 @@ import {
 describe('WsForwardServer', function() {
   this.timeout(10000)
   let port: number
-  let server: ServiceForwarder
+  let server: http.Server
+  let forwarder: ServiceForwarder
 
   beforeEach(async () => {
-    server = new ServiceForwarder()
+    server = http.createServer()
+    forwarder = new ServiceForwarder({
+      server,
+    })
     port = await getPort()
-    await server.listen(port)
+    await asyncHttp(server).listen(port)
   })
 
   afterEach(async () => {
-    await server.close()
+    await forwarder.close()
+    await asyncHttp(server).close()
   })
 
   it('works', async () => {
@@ -47,14 +53,14 @@ describe('WsForwardServer', function() {
 
     await wait(50)
 
-    assert.ok(server.serviceStore.has('service01'))
+    assert.ok(forwarder.serviceStore.has('service01'))
 
     const request: RequestPayload = {
       id: uuid(),
       type: 'req',
       payload: 'hello',
     }
-    const resp = await server.serviceStore.get('service01').call(request)
+    const resp = await forwarder.serviceStore.get('service01').call(request)
     assert.deepStrictEqual(resp, {
       id: request.id,
       type: 'res',

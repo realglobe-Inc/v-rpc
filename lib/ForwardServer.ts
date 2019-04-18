@@ -5,7 +5,7 @@ import { ServiceForwarder } from './core/ServiceForwarder'
 import { createEndpoints } from './core/Endpoint'
 import { asyncHttp } from './helpers/asyncWrap'
 
-export class Server {
+export class ForwardServer {
   http: http.Server
   app: Koa
   forwarder: ServiceForwarder
@@ -15,7 +15,9 @@ export class Server {
     const server = http.createServer(app.callback())
     this.http = server
     this.app = app
-    this.forwarder = new ServiceForwarder({ server })
+    this.forwarder = new ServiceForwarder({
+      server,
+    })
     app.use(this.createRoutes())
   }
 

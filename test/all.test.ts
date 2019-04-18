@@ -3,13 +3,13 @@ import getPort from 'get-port'
 import wait from 'waait'
 import fetch from 'node-fetch'
 import { ServiceClient } from '../lib/ServiceClient'
-import { Server } from '../lib/Server'
+import { ForwardServer } from '../lib'
 
 describe('all', function() {
   this.timeout(10000)
 
   it('case 01', async () => {
-    const server = new Server()
+    const server = new ForwardServer()
     const port = await getPort()
     await server.listen(port)
 
@@ -38,7 +38,7 @@ describe('all', function() {
   })
 
   it('case 02', async () => {
-    const server = new Server()
+    const server = new ForwardServer()
     const port = await getPort()
     await server.listen(port)
 

@@ -1,2 +1,2 @@
-export * from './Server'
+export * from './ForwardServer'
 export * from './ServiceClient'
