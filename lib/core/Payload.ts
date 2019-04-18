@@ -1,4 +1,4 @@
-type PayloadType = 'req' | 'res' | 'notification:serviceId'
+type PayloadType = 'req' | 'res'
 
 interface Payload {
   id: string | null
@@ -16,12 +16,6 @@ export interface ResponsePayload extends Payload {
   type: 'res'
 }
 
-export interface ServiceIdNotificationPayload extends Payload {
-  id: null
-  type: 'notification:serviceId'
-  payload: string
-}
-
 export const isRequestPayload = (payload: any) =>
   payload &&
   payload.id &&
@@ -31,9 +25,4 @@ export const isResponsePayload = (payload: any) =>
   payload &&
   payload.id &&
   payload.type === 'res' &&
-  typeof payload.payload === 'string'
-export const isServiceIdNotificationPayload = (payload: any) =>
-  payload &&
-  payload.id === null &&
-  payload.type === 'notification:serviceId' &&
   typeof payload.payload === 'string'

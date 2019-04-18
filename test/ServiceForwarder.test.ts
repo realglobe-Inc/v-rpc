@@ -6,11 +6,8 @@ import getPort from 'get-port'
 import uuid from 'uuid'
 import http from 'http'
 import { asyncWrapWs, asyncHttp } from '../lib/helpers/asyncWrap'
-import {
-  ResponsePayload,
-  ServiceIdNotificationPayload,
-  RequestPayload,
-} from '../lib/core/Payload'
+import { ResponsePayload, RequestPayload } from '../lib/core/Payload'
+import { SERVICE_ID_HEADER_NAME } from '../lib'
 
 describe('WsForwardServer', function() {
   this.timeout(10000)
@@ -33,7 +30,11 @@ describe('WsForwardServer', function() {
   })
 
   it('works', async () => {
-    const ws = new WebSocket(`http://localhost:${port}`)
+    const ws = new WebSocket(`http://localhost:${port}`, {
+      headers: {
+        [SERVICE_ID_HEADER_NAME]: 'service01',
+      },
+    })
     ws.on('message', (message: string) => {
       const resp: ResponsePayload = {
         id: JSON.parse(message).id,
@@ -44,14 +45,7 @@ describe('WsForwardServer', function() {
     })
     await asyncWrapWs(ws).waitOpen()
 
-    const notification: ServiceIdNotificationPayload = {
-      id: null,
-      type: 'notification:serviceId',
-      payload: 'service01',
-    }
-    ws.send(JSON.stringify(notification))
-
-    await wait(50)
+    await wait(10)
 
     assert.ok(forwarder.serviceStore.has('service01'))
 

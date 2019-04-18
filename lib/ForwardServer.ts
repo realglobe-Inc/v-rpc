@@ -1,9 +1,11 @@
 import http from 'http'
 import Koa from 'koa'
 import Router from 'koa-router'
+import WebSocket from 'ws'
 import { ServiceForwarder } from './core/ServiceForwarder'
 import { createEndpoints } from './core/Endpoint'
 import { asyncHttp } from './helpers/asyncWrap'
+import { SERVICE_ID_HEADER_NAME } from './core/Constants'
 
 export class ForwardServer {
   http: http.Server

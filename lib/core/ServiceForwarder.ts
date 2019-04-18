@@ -1,10 +1,10 @@
 import WebSocket from 'ws'
 import { asyncWrapWss } from '../helpers/asyncWrap'
-import { ServiceIdNotificationPayload } from './Payload'
 import { ServiceStore } from './ServiceStore'
 import { WsServiceProxy } from './ServiceProxy'
 import Debug from 'debug'
-import { Server } from 'http'
+import { Server, IncomingMessage } from 'http'
+import { SERVICE_ID_HEADER_NAME } from './Constants'
 
 const debug = Debug('v-forward:server')
 
@@ -31,8 +31,12 @@ export class ServiceForwarder {
     }
   }
 
-  private onConnection = async (ws: WebSocket) => {
-    const serviceId = await this.waitServiceId(ws)
+  private onConnection = async (ws: WebSocket, req: IncomingMessage) => {
+    const serviceId = req.headers[SERVICE_ID_HEADER_NAME]
+    if (!serviceId || typeof serviceId !== 'string') {
+      ws.terminate()
+      return
+    }
     const service = new WsServiceProxy(serviceId, ws)
 
     this.serviceStore.set(service)
@@ -49,48 +53,5 @@ export class ServiceForwarder {
 
   private onError = (socket: WebSocket, err: Error) => {
     console.error(err)
-  }
-
-  /**
-   * Wait web socket to recieve service id notification
-   */
-  private async waitServiceId(ws: WebSocket) {
-    // TODO: Reject timeout
-    return new Promise((resolve: (serviceId: string) => void, reject) => {
-      function onMessage(data: any) {
-        if (typeof data !== 'string') {
-          reject(
-            `Invalid message data type for the first message: ${typeof data}`,
-          )
-          return
-        }
-
-        let json = null as any
-        try {
-          json = JSON.parse(data)
-        } catch (e) {
-          // Do nothing
-        }
-        if (!json) {
-          reject(`JSON parse error: ${data}`)
-          return
-        }
-
-        const isValid =
-          json.type === 'notification:serviceId' &&
-          json.payload &&
-          typeof json.payload === 'string'
-        if (!isValid) {
-          reject(`Invalid message data for the first message: ${data}`)
-          return
-        }
-
-        const notification = json as ServiceIdNotificationPayload
-        const serviceId = notification.payload
-        resolve(serviceId)
-      }
-
-      ws.once('message', onMessage)
-    })
   }
 }

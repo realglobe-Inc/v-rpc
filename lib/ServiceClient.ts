@@ -1,11 +1,11 @@
 import WebSocket from 'ws'
 import { asyncWrapWs } from './helpers/asyncWrap'
 import {
-  ServiceIdNotificationPayload,
   isRequestPayload,
   RequestPayload,
   ResponsePayload,
 } from './core/Payload'
+import { SERVICE_ID_HEADER_NAME } from './core/Constants'
 
 export type ServiceMethod = (arg: string) => Promise<string>
 
@@ -30,14 +30,12 @@ export class ServiceClient {
   }
 
   async connect() {
-    const ws = new WebSocket(this.url)
+    const ws = new WebSocket(this.url, {
+      headers: {
+        [SERVICE_ID_HEADER_NAME]: this.serviceId,
+      },
+    })
     await asyncWrapWs(ws).waitOpen()
-    const idNotification: ServiceIdNotificationPayload = {
-      id: null,
-      payload: this.serviceId,
-      type: 'notification:serviceId',
-    }
-    ws.send(JSON.stringify(idNotification))
     ws.on('message', async (message: any) => {
       if (typeof message !== 'string') {
         return
