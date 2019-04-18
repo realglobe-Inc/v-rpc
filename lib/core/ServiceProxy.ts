@@ -1,5 +1,10 @@
 import WebSocket from 'ws'
-import { RequestPayload, ResponsePayload } from './Payload'
+import {
+  RequestPayload,
+  ResponsePayload,
+  encodePayload,
+  decodePayload,
+} from './Payload'
 
 export interface ServiceProxy {
   id: string
@@ -22,13 +27,13 @@ export class WsServiceProxy implements ServiceProxy {
         resolve: (res: ResponsePayload) => void,
         reject: (reason: string) => void,
       ) => {
-        ws.send(JSON.stringify(req), (err) => {
+        ws.send(encodePayload(req), (err) => {
           if (err) {
             reject(`Failed to call with web socket error: "${err.message}"`)
           }
         })
-        ws.addListener('message', function onMessage(message: string) {
-          const res = JSON.parse(message) as ResponsePayload
+        ws.addListener('message', function onMessage(message: Buffer) {
+          const res = decodePayload(message) as ResponsePayload
           const isRes = (res: ResponsePayload) =>
             res.type === 'res' && res.id === req.id
           if (isRes(res)) {

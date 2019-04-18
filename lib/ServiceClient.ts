@@ -4,10 +4,12 @@ import {
   isRequestPayload,
   RequestPayload,
   ResponsePayload,
+  decodePayload,
+  encodePayload,
 } from './core/Payload'
 import { SERVICE_ID_HEADER_NAME } from './core/Constants'
 
-export type ServiceMethod = (arg: string) => Promise<string>
+export type ServiceMethod = (arg: string | Buffer) => Promise<string | Buffer>
 
 export class ServiceClient {
   url: string
@@ -37,10 +39,10 @@ export class ServiceClient {
     })
     await asyncWrapWs(ws).waitOpen()
     ws.on('message', async (message: any) => {
-      if (typeof message !== 'string') {
+      if (!Buffer.isBuffer(message)) {
         return
       }
-      const payload = JSON.parse(message) as RequestPayload
+      const payload = decodePayload(message) as RequestPayload
       if (!isRequestPayload(payload)) {
         return
       }
@@ -51,7 +53,7 @@ export class ServiceClient {
         type: 'res',
         payload: result,
       }
-      ws.send(JSON.stringify(response))
+      ws.send(encodePayload(response))
     })
     this.ws = ws
   }

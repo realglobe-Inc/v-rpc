@@ -3,7 +3,11 @@ import { strict as assert } from 'assert'
 import getPort from 'get-port'
 import uuid from 'uuid'
 import { WsServiceProxy } from '../lib/core/ServiceProxy'
-import { ResponsePayload } from '../lib/core/Payload'
+import {
+  ResponsePayload,
+  decodePayload,
+  encodePayload,
+} from '../lib/core/Payload'
 import { asyncWrapWss } from '../lib/helpers/asyncWrap'
 
 describe('WsServiceProxy', function() {
@@ -25,13 +29,13 @@ describe('WsServiceProxy', function() {
 
   it('sends request and recieves response on call()', async () => {
     const ws = new WebSocket(`http://localhost:${port}`)
-    ws.on('message', (payload: string) => {
+    ws.on('message', (message: Buffer) => {
       const resp: ResponsePayload = {
-        id: JSON.parse(payload).id,
+        id: decodePayload(message).id,
         type: 'res',
         payload: 'world',
       }
-      ws.send(JSON.stringify(resp))
+      ws.send(encodePayload(resp))
     })
     const wsOnServer = await asyncWrapWss(wss).waitConnection()
 

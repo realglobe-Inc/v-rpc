@@ -59,4 +59,27 @@ describe('all', function() {
     assert.strictEqual(result, 'hellohello')
     await server.close()
   })
+
+  it('binary data', async () => {
+    const server = new ForwardServer()
+    const port = await getPort()
+    await server.listen(port)
+
+    const serviceId = 'service01'
+    const service = new ServiceClient({
+      url: `http://localhost:${port}`,
+      serviceId,
+      method: (arg: Buffer) => Promise.resolve(arg),
+    })
+    await service.connect()
+    await wait(10)
+
+    const resp = await fetch(`http://localhost:${port}/services/${serviceId}`, {
+      method: 'POST',
+      body: Buffer.from('a'),
+    })
+    const result = await resp.buffer()
+    assert.strictEqual(String(result), 'a')
+    await server.close()
+  })
 })

@@ -6,7 +6,12 @@ import getPort from 'get-port'
 import uuid from 'uuid'
 import http from 'http'
 import { asyncWrapWs, asyncHttp } from '../lib/helpers/asyncWrap'
-import { ResponsePayload, RequestPayload } from '../lib/core/Payload'
+import {
+  ResponsePayload,
+  RequestPayload,
+  decodePayload,
+  encodePayload,
+} from '../lib/core/Payload'
 import { SERVICE_ID_HEADER_NAME } from '../lib'
 
 describe('WsForwardServer', function() {
@@ -35,13 +40,13 @@ describe('WsForwardServer', function() {
         [SERVICE_ID_HEADER_NAME]: 'service01',
       },
     })
-    ws.on('message', (message: string) => {
+    ws.on('message', (message: Buffer) => {
       const resp: ResponsePayload = {
-        id: JSON.parse(message).id,
+        id: decodePayload(message).id,
         type: 'res',
         payload: 'world',
       }
-      ws.send(JSON.stringify(resp))
+      ws.send(encodePayload(resp))
     })
     await asyncWrapWs(ws).waitOpen()
 

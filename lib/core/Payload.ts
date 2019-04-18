@@ -1,20 +1,18 @@
-type PayloadType = 'req' | 'res'
+import msgpack from 'msgpack-lite'
 
-interface Payload {
-  id: string | null
-  payload: string
-  type: PayloadType
-}
-
-export interface RequestPayload extends Payload {
+export interface RequestPayload {
   id: string
+  payload: string | Buffer
   type: 'req'
 }
 
-export interface ResponsePayload extends Payload {
+export interface ResponsePayload {
   id: string
+  payload: string | Buffer
   type: 'res'
 }
+
+export type Payload = RequestPayload | ResponsePayload
 
 export const isRequestPayload = (payload: any) =>
   payload &&
@@ -26,3 +24,6 @@ export const isResponsePayload = (payload: any) =>
   payload.id &&
   payload.type === 'res' &&
   typeof payload.payload === 'string'
+
+export const encodePayload = (payload: Payload) => msgpack.encode(payload)
+export const decodePayload = (payloadBuf: Buffer) => msgpack.decode(payloadBuf)
