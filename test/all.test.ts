@@ -5,6 +5,7 @@ import fetch from 'node-fetch'
 import { ServiceClient } from '../lib/ServiceClient'
 import { ForwardServer } from '../lib'
 import { IncomingMessage } from 'http'
+import protobuf from 'protobufjs'
 
 describe('all', function() {
   this.timeout(10000)
@@ -42,17 +43,23 @@ describe('all', function() {
     const service = new ServiceClient({
       url: `http://localhost:${port}`,
       serviceId,
-      method: (arg: Buffer) => Promise.resolve(arg),
+      method: (arg: Buffer) => {
+        assert.ok(Buffer.isBuffer(arg))
+        return Promise.resolve(arg)
+      },
     })
     await service.connect()
     await wait(10)
 
     const resp = await fetch(`http://localhost:${port}/services/${serviceId}`, {
       method: 'POST',
-      body: Buffer.from('a'),
+      body: Buffer.from('binary'),
+      headers: {
+        'Content-Type': 'application/octet-stream',
+      },
     })
     const result = await resp.buffer()
-    assert.strictEqual(String(result), 'a')
+    assert.strictEqual(String(result), 'binary')
 
     await server.close()
   })
@@ -61,7 +68,7 @@ describe('all', function() {
     const server = new ForwardServer({
       verifyService: (req: IncomingMessage) => {
         const authorization = req.headers['authorization']
-        if (!authorization || typeof authorization !== 'string') {
+        if (!authorization) {
           return false
         }
         const match = authorization.match(/Bearer (.+)/)
@@ -96,6 +103,51 @@ describe('all', function() {
       await service.connect()
       service.close()
     }
+
+    await server.close()
+  })
+
+  it('protocol buffer example', async () => {
+    const server = new ForwardServer()
+    const port = await getPort()
+    await server.listen(port)
+
+    const root = await protobuf.load(__dirname + '/files/greeter.proto')
+    const HelloRequest = root.lookupType('HelloRequest')
+    const HelloReply = root.lookupType('HelloReply')
+
+    const serviceId = 'service01'
+    const service = new ServiceClient({
+      url: `http://localhost:${port}`,
+      serviceId,
+      method: async (data: Buffer) => {
+        const decoded = HelloRequest.decode(data)
+        const request = HelloRequest.toObject(decoded)
+        const response = HelloReply.fromObject({
+          message: 'Hello ' + request.name,
+        })
+        const encoded = HelloReply.encode(response).finish()
+        return encoded as Buffer
+      },
+    })
+    await service.connect()
+
+    const requestBody = HelloRequest.encode(
+      HelloRequest.fromObject({
+        name: 'World',
+      }),
+    ).finish() as Buffer
+    const resp = await fetch(`http://localhost:${port}/services/${serviceId}`, {
+      method: 'POST',
+      body: requestBody,
+      headers: {
+        'Content-Type': 'application/octet-stream',
+      },
+    })
+    const encoded = await resp.buffer()
+    const message = HelloReply.decode(encoded)
+    const reply = HelloReply.toObject(message)
+    assert.strictEqual(reply.message, 'Hello World')
 
     await server.close()
   })

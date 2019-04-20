@@ -33,6 +33,7 @@
     "mocha": "^6.1.4",
     "node-fetch": "^2.3.0",
     "prettier": "^1.16.4",
+    "protobufjs": "^6.8.8",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",

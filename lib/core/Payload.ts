@@ -14,18 +14,14 @@ export interface ResponsePayload {
 
 export type Payload = RequestPayload | ResponsePayload
 
-export const isRequestPayload = (payload: any) =>
-  payload &&
-  payload.id &&
-  payload.type === 'req' &&
-  typeof payload.payload === 'string'
-export const isResponsePayload = (payload: any) =>
-  payload &&
-  payload.id &&
-  payload.type === 'res' &&
-  typeof payload.payload === 'string'
 export const isPayload = (payload: any) =>
-  isRequestPayload(payload) || isResponsePayload(payload)
+  payload &&
+  payload.id &&
+  (typeof payload.payload === 'string' || Buffer.isBuffer(payload.payload))
+export const isRequestPayload = (payload: any) =>
+  isPayload(payload) && payload.type === 'req'
+export const isResponsePayload = (payload: any) =>
+  isPayload(payload) && payload.type === 'res'
 
 export const encodePayload = (payload: Payload): Buffer =>
   msgpack.encode(payload)

@@ -7,6 +7,7 @@ import {
   isResponsePayload,
 } from './Payload'
 import { asyncWrapWs } from '../helpers/asyncWrap'
+import { payloadWrap } from '../helpers/payloadWrap'
 
 export interface ServiceProxy {
   id: string
@@ -29,8 +30,8 @@ export class WsServiceProxy implements ServiceProxy {
         resolve: (res: ResponsePayload) => void,
         reject: (reason: string) => void,
       ) => {
-        asyncWrapWs(ws)
-          .send(encodePayload(req))
+        payloadWrap(ws)
+          .sendPayload(req)
           .catch((err) =>
             reject(`Failed to call with web socket error: "${err.message}"`),
           )
