@@ -7,7 +7,7 @@ import { Server, IncomingMessage } from 'http'
 import { SERVICE_ID_HEADER_NAME } from './Constants'
 import { wssConnectionDetector } from '../helpers/wsConnectDetector'
 
-const debug = Debug('v-forward:server')
+const debug = Debug('v-rpc:server')
 
 export type VerifyService = (req: IncomingMessage) => boolean | Promise<boolean>
 

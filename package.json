@@ -1,5 +1,5 @@
 {
-  "name": "v-forward",
+  "name": "v-rpc",
   "description": "RPC forwarding server",
   "version": "0.1.0",
   "author": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/FujiHaruka"
   },
   "bugs": {
-    "url": "https://github.com/realglobe-Inc/v-forward/issues"
+    "url": "https://github.com/realglobe-Inc/v-rpc/issues"
   },
   "dependencies": {
     "debug": "^4.1.1",
@@ -41,7 +41,7 @@
     "typescript": "^3.4.4",
     "waait": "^1.0.4"
   },
-  "homepage": "https://github.com/realglobe-Inc/v-forward#readme",
+  "homepage": "https://github.com/realglobe-Inc/v-rpc#readme",
   "keywords": [
     "v"
   ],
@@ -49,7 +49,7 @@
   "main": "shim/lib",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/realglobe-Inc/v-forward.git"
+    "url": "git+https://github.com/realglobe-Inc/v-rpc.git"
   },
   "scripts": {
     "build": "tsc",
