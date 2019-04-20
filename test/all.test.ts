@@ -4,40 +4,12 @@ import wait from 'waait'
 import fetch from 'node-fetch'
 import { ServiceClient } from '../lib/ServiceClient'
 import { ForwardServer } from '../lib'
+import { IncomingMessage } from 'http'
 
 describe('all', function() {
   this.timeout(10000)
 
-  it('case 01', async () => {
-    const server = new ForwardServer()
-    const port = await getPort()
-    await server.listen(port)
-
-    const serviceId = 'service01'
-
-    const service = new ServiceClient({
-      url: `http://localhost:${port}`,
-      serviceId,
-      method: (arg: string) => Promise.resolve(arg + arg),
-    })
-    await service.connect()
-    await wait(30)
-
-    const serviceProxy = server.forwarder.serviceStore.get(serviceId)
-    const response = await serviceProxy.call({
-      id: 'method01',
-      type: 'req',
-      payload: 'hello',
-    })
-    assert.deepStrictEqual(response, {
-      id: 'method01',
-      type: 'res',
-      payload: 'hellohello',
-    })
-    await server.close()
-  })
-
-  it('case 02', async () => {
+  it('Simple text res / req', async () => {
     const server = new ForwardServer()
     const port = await getPort()
     await server.listen(port)
@@ -57,6 +29,7 @@ describe('all', function() {
     })
     const result = await resp.text()
     assert.strictEqual(result, 'hellohello')
+
     await server.close()
   })
 
@@ -80,6 +53,50 @@ describe('all', function() {
     })
     const result = await resp.buffer()
     assert.strictEqual(String(result), 'a')
+
+    await server.close()
+  })
+
+  it('verify service', async () => {
+    const server = new ForwardServer({
+      verifyService: (req: IncomingMessage) => {
+        const authorization = req.headers['authorization']
+        if (!authorization || typeof authorization !== 'string') {
+          return false
+        }
+        const match = authorization.match(/Bearer (.+)/)
+        if (!match) {
+          return false
+        }
+        const token = match[1]
+        return token === 'xxxxxx'
+      },
+    })
+    const port = await getPort()
+    await server.listen(port)
+
+    {
+      const service = new ServiceClient({
+        url: `http://localhost:${port}`,
+        serviceId: 'service01',
+        method: (arg: string) => Promise.resolve(arg),
+      })
+      await assert.rejects(() => service.connect())
+    }
+
+    {
+      const service = new ServiceClient({
+        url: `http://localhost:${port}`,
+        serviceId: 'service01',
+        method: (arg: string) => Promise.resolve(arg),
+        headers: {
+          Authorization: 'Bearer xxxxxx',
+        },
+      })
+      await service.connect()
+      service.close()
+    }
+
     await server.close()
   })
 })

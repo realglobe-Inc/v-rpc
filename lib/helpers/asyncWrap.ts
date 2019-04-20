@@ -1,5 +1,5 @@
 import WebSocket from 'ws'
-import { Server } from 'http'
+import { Server, ClientRequest, IncomingMessage } from 'http'
 
 /**
  * Wrap wss methods as async methods
@@ -29,7 +29,11 @@ export const asyncWrapWss = (wss: WebSocket.Server) => ({
  */
 export const asyncWrapWs = (ws: WebSocket) => ({
   waitOpen: async () => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+      ws.once(
+        'unexpected-response',
+        (req: ClientRequest, res: IncomingMessage) => reject(res.statusMessage),
+      )
       ws.once('open', () => resolve())
     })
   },

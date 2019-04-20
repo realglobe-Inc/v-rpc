@@ -9,6 +9,7 @@ import {
 } from './core/Payload'
 import { SERVICE_ID_HEADER_NAME } from './core/Constants'
 import { wsConnectionDetector } from './helpers/wsConnectDetector'
+import { IncomingHttpHeaders, IncomingMessage } from 'http'
 
 export type ServiceMethod = (arg: string | Buffer) => Promise<string | Buffer>
 
@@ -16,26 +17,31 @@ export class ServiceClient {
   url: string
   serviceId: string
   method: ServiceMethod
+  headers?: { [key: string]: string }
   private ws: WebSocket
 
   constructor({
     url,
     serviceId,
     method,
+    headers,
   }: {
     url: string
     serviceId: string
     method: ServiceMethod
+    headers?: { [key: string]: string }
   }) {
     this.url = url
     this.serviceId = serviceId
     this.method = method
+    this.headers = headers
   }
 
   async connect() {
     const ws = new WebSocket(this.url, {
       headers: {
         [SERVICE_ID_HEADER_NAME]: this.serviceId,
+        ...(this.headers || {}),
       },
     })
     wsConnectionDetector(ws)
