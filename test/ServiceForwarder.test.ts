@@ -42,7 +42,7 @@ describe('WsForwardServer', function() {
     })
     ws.on('message', (message: Buffer) => {
       const resp: ResponsePayload = {
-        id: decodePayload(message).id,
+        id: decodePayload(message)!.id,
         type: 'res',
         payload: 'world',
       }

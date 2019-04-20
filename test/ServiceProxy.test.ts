@@ -31,7 +31,7 @@ describe('WsServiceProxy', function() {
     const ws = new WebSocket(`http://localhost:${port}`)
     ws.on('message', (message: Buffer) => {
       const resp: ResponsePayload = {
-        id: decodePayload(message).id,
+        id: decodePayload(message)!.id,
         type: 'res',
         payload: 'world',
       }

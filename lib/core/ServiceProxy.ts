@@ -4,6 +4,7 @@ import {
   ResponsePayload,
   encodePayload,
   decodePayload,
+  isResponsePayload,
 } from './Payload'
 import { asyncWrapWs } from '../helpers/asyncWrap'
 
@@ -33,13 +34,15 @@ export class WsServiceProxy implements ServiceProxy {
           .catch((err) =>
             reject(`Failed to call with web socket error: "${err.message}"`),
           )
-        ws.addListener('message', function onMessage(message: Buffer) {
-          const res = decodePayload(message) as ResponsePayload
-          const isRes = (res: ResponsePayload) =>
-            res.type === 'res' && res.id === req.id
-          if (isRes(res)) {
+        ws.addListener('message', function onMessage(message: any) {
+          const payload = decodePayload(message) as ResponsePayload
+          if (!payload || !isResponsePayload(payload)) {
+            return
+          }
+          const isResponse = payload.type === 'res' && payload.id === req.id
+          if (isResponse) {
             ws.removeListener('message', onMessage)
-            resolve(res)
+            resolve(payload)
           }
         })
       },

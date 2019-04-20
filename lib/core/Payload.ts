@@ -24,6 +24,18 @@ export const isResponsePayload = (payload: any) =>
   payload.id &&
   payload.type === 'res' &&
   typeof payload.payload === 'string'
+export const isPayload = (payload: any) =>
+  isRequestPayload(payload) || isResponsePayload(payload)
 
-export const encodePayload = (payload: Payload) => msgpack.encode(payload)
-export const decodePayload = (payloadBuf: Buffer) => msgpack.decode(payloadBuf)
+export const encodePayload = (payload: Payload): Buffer =>
+  msgpack.encode(payload)
+export const decodePayload = (payloadBuf: any): Payload | null => {
+  if (!Buffer.isBuffer(payloadBuf)) {
+    return null
+  }
+  const payload = msgpack.decode(payloadBuf)
+  if (!isPayload(payload)) {
+    return null
+  }
+  return payload as Payload
+}

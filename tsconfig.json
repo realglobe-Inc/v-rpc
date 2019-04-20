@@ -16,7 +16,8 @@
     "build"
   ],
   "include": [
-    "lib"
+    "lib",
+    "test"
   ],
   "types": [
     "mocha"
