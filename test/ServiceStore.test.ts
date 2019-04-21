@@ -1,11 +1,12 @@
 import { strict as assert } from 'assert'
+
 import { ServiceProxy } from '../lib/core/ServiceProxy'
 import { ServiceStore } from '../lib/core/ServiceStore'
 
 describe('ServiceStore', () => {
   const createService = (): ServiceProxy => ({
-    id: '01',
     call: () => null as any,
+    id: '01',
     options: {},
   })
   it('works as store', () => {

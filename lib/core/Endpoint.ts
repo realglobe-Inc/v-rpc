@@ -1,22 +1,13 @@
 import uuid from 'uuid'
 import getRawBody from 'raw-body'
 import { Context } from 'koa'
+
 import { ServiceForwarder } from './ServiceForwarder'
 import { RequestPayload } from './Payload'
 import { getEncoding } from '../helpers/getEncoding'
 import { DEFAULT_SERVICE_TIMEOUT } from './Constants'
 
 export const createEndpoints = (forwarder: ServiceForwarder) => ({
-  checkService: async (ctx: Context) => {
-    const serviceId = ctx.params.serviceId as string
-    if (forwarder.serviceStore.has(serviceId)) {
-      ctx.status = 200
-      ctx.body = 'available'
-    } else {
-      ctx.status = 404
-      ctx.body = 'Service not found'
-    }
-  },
   callServiceMethod: async (ctx: Context) => {
     const serviceId = ctx.params.serviceId as string
     const serviceProxy = forwarder.serviceStore.get(serviceId)
@@ -38,16 +29,27 @@ export const createEndpoints = (forwarder: ServiceForwarder) => ({
     const { encoding } = hasContentType
 
     const payload = await getRawBody(ctx.req, {
+      encoding,
       length: ctx.req.headers['content-length'],
       limit: '1mb',
-      encoding,
     })
     const requestPayload: RequestPayload = {
       id: uuid(),
-      type: 'req',
       payload,
+      type: 'req',
     }
     const responsePayload = await serviceProxy.call(requestPayload)
     ctx.body = responsePayload.payload
+  },
+
+  checkService: async (ctx: Context) => {
+    const serviceId = ctx.params.serviceId as string
+    if (forwarder.serviceStore.has(serviceId)) {
+      ctx.status = 200
+      ctx.body = 'available'
+    } else {
+      ctx.status = 404
+      ctx.body = 'Service not found'
+    }
   },
 })

@@ -2,6 +2,7 @@ import WebSocket from 'ws'
 import { strict as assert } from 'assert'
 import getPort from 'get-port'
 import uuid from 'uuid'
+
 import { WsServiceProxy } from '../lib/core/ServiceProxy'
 import {
   ResponsePayload,
@@ -32,8 +33,8 @@ describe('WsServiceProxy', function() {
     ws.on('message', (message: Buffer) => {
       const resp: ResponsePayload = {
         id: decodePayload(message)!.id,
-        type: 'res',
         payload: 'world',
+        type: 'res',
       }
       ws.send(encodePayload(resp))
     })
@@ -43,13 +44,13 @@ describe('WsServiceProxy', function() {
     const callId = uuid()
     const resp = await serviceProxy.call({
       id: callId,
-      type: 'req',
       payload: 'hello',
+      type: 'req',
     })
     assert.deepStrictEqual(resp, {
       id: callId,
-      type: 'res',
       payload: 'world',
+      type: 'res',
     })
   })
 })

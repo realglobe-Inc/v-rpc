@@ -1,4 +1,5 @@
 import assert from 'assert'
+
 import { getEncoding } from '../lib/helpers/getEncoding'
 
 describe('getEncoding', () => {

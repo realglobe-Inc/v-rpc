@@ -1,14 +1,14 @@
 import WebSocket from 'ws'
-import { asyncWrapWss } from '../helpers/asyncWrap'
-import { ServiceStore } from './ServiceStore'
-import { WsServiceProxy } from './ServiceProxy'
 import Debug from 'debug'
 import { Server, IncomingMessage } from 'http'
+
+import { asyncWrapWss } from '../helpers/asyncWrap'
+import { ServiceStore } from './ServiceStore'
 import {
   SERVICE_ID_HEADER_NAME,
   SERVICE_TIMEOUT_HEADER_NAME,
-  DEFAULT_SERVICE_TIMEOUT,
 } from './Constants'
+import { WsServiceProxy } from './ServiceProxy'
 import { wssConnectionDetector } from '../helpers/wsConnectDetector'
 
 const debug = Debug('v-rpc:server')

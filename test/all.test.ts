@@ -2,10 +2,11 @@ import { strict as assert } from 'assert'
 import getPort from 'get-port'
 import wait from 'waait'
 import fetch from 'node-fetch'
-import { ServiceClient } from '../lib/ServiceClient'
-import { ForwardServer } from '../lib'
 import { IncomingMessage } from 'http'
 import protobuf from 'protobufjs'
+
+import { ServiceClient } from '../lib/ServiceClient'
+import { ForwardServer } from '../lib'
 
 describe('all', function() {
   this.timeout(10000)
@@ -17,16 +18,16 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
-      url: `http://localhost:${port}`,
-      serviceId,
       method: (arg: string) => Promise.resolve(arg + arg),
+      serviceId,
+      url: `http://localhost:${port}`,
     })
     await service.connect()
     await wait(30)
 
     const resp = await fetch(`http://localhost:${port}/services/${serviceId}`, {
-      method: 'POST',
       body: 'hello',
+      method: 'POST',
     })
     const result = await resp.text()
     assert.strictEqual(result, 'hellohello')
@@ -41,22 +42,22 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
-      url: `http://localhost:${port}`,
-      serviceId,
       method: (arg: Buffer) => {
         assert.ok(Buffer.isBuffer(arg))
         return Promise.resolve(arg)
       },
+      serviceId,
+      url: `http://localhost:${port}`,
     })
     await service.connect()
     await wait(10)
 
     const resp = await fetch(`http://localhost:${port}/services/${serviceId}`, {
-      method: 'POST',
       body: Buffer.from('binary'),
       headers: {
         'Content-Type': 'application/octet-stream',
       },
+      method: 'POST',
     })
     const result = await resp.buffer()
     assert.strictEqual(String(result), 'binary')
@@ -84,21 +85,21 @@ describe('all', function() {
 
     {
       const service = new ServiceClient({
-        url: `http://localhost:${port}`,
-        serviceId: 'service01',
         method: (arg: string) => Promise.resolve(arg),
+        serviceId: 'service01',
+        url: `http://localhost:${port}`,
       })
       await assert.rejects(() => service.connect())
     }
 
     {
       const service = new ServiceClient({
-        url: `http://localhost:${port}`,
-        serviceId: 'service01',
-        method: (arg: string) => Promise.resolve(arg),
         headers: {
           Authorization: 'Bearer xxxxxx',
         },
+        method: (arg: string) => Promise.resolve(arg),
+        serviceId: 'service01',
+        url: `http://localhost:${port}`,
       })
       await service.connect()
       service.close()
@@ -118,8 +119,6 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
-      url: `http://localhost:${port}`,
-      serviceId,
       method: async (data: Buffer) => {
         const decoded = HelloRequest.decode(data)
         const request = HelloRequest.toObject(decoded)
@@ -129,6 +128,8 @@ describe('all', function() {
         const encoded = HelloReply.encode(response).finish()
         return encoded as Buffer
       },
+      serviceId,
+      url: `http://localhost:${port}`,
     })
     await service.connect()
 
@@ -138,11 +139,11 @@ describe('all', function() {
       }),
     ).finish() as Buffer
     const resp = await fetch(`http://localhost:${port}/services/${serviceId}`, {
-      method: 'POST',
       body: requestBody,
       headers: {
         'Content-Type': 'application/octet-stream',
       },
+      method: 'POST',
     })
     const encoded = await resp.buffer()
     const message = HelloReply.decode(encoded)
@@ -159,27 +160,27 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
-      url: `http://localhost:${port}`,
-      serviceId,
       method: async (data: string) => {
         const { method, id } = JSON.parse(data)
         if (method === 'hello') {
           return JSON.stringify({
-            jsonrpc: '2.0',
             id,
+            jsonrpc: '2.0',
             result: 'world',
           })
         } else {
           return JSON.stringify({
-            jsonrpc: '2.0',
-            id,
             error: {
               code: -32601,
               message: 'Method not found',
             },
+            id,
+            jsonrpc: '2.0',
           })
         }
       },
+      serviceId,
+      url: `http://localhost:${port}`,
     })
     await service.connect()
 
@@ -187,15 +188,15 @@ describe('all', function() {
       const resp = await fetch(
         `http://localhost:${port}/services/${serviceId}`,
         {
-          method: 'POST',
           body: JSON.stringify({
-            jsonrpc: '2.0',
             id: 1,
+            jsonrpc: '2.0',
             method: 'hello',
           }),
           headers: {
             'Content-Type': 'application/json',
           },
+          method: 'POST',
         },
       )
       const json = await resp.json()
@@ -205,15 +206,15 @@ describe('all', function() {
       const resp = await fetch(
         `http://localhost:${port}/services/${serviceId}`,
         {
-          method: 'POST',
           body: JSON.stringify({
-            jsonrpc: '2.0',
             id: 2,
+            jsonrpc: '2.0',
             method: 'notFoundMethod',
           }),
           headers: {
             'Content-Type': 'application/json',
           },
+          method: 'POST',
         },
       )
       const json = await resp.json()
@@ -229,8 +230,8 @@ describe('all', function() {
     await server.listen(port)
 
     const resp = await fetch(`http://localhost:${port}/services/service0000`, {
-      method: 'POST',
       body: 'hello',
+      method: 'POST',
     })
     assert.ok(!resp.ok)
     assert.strictEqual(resp.status, 404)
@@ -245,18 +246,18 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
-      url: `http://localhost:${port}`,
-      serviceId,
       method: () =>
         new Promise((resolve) => setTimeout(() => resolve('a'), 10000).unref()),
+      serviceId,
       timeout: 10,
+      url: `http://localhost:${port}`,
     })
     await service.connect()
 
     await assert.rejects(() =>
       fetch(`http://localhost:${port}/services/${serviceId}`, {
-        method: 'POST',
         body: 'hello',
+        method: 'POST',
       }),
     )
 

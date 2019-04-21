@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [ "es2015", "es2017.object", "es2016.array.include" ],
+    "lib": [ "esnext" ],
     "outDir": "./shim",
     "module": "commonjs",
     "target": "es6",
@@ -9,6 +9,9 @@
     "esModuleInterop": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
+    "incremental": true,
+    "removeComments": false,
+    "forceConsistentCasingInFileNames": true,
     "sourceMap": true
   },
   "exclude": [

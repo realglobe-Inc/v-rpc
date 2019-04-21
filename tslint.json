@@ -4,12 +4,15 @@
     "tslint-config-prettier"
   ],
   "rulesDirectory": [
-    "tslint-plugin-prettier"
+    "tslint-plugin-prettier",
+    "node_modules/tslint-origin-ordered-imports-rule/dist"
   ],
   "rules": {
     "prettier": true,
     "no-default-export": true,
     "return-undefined": false,
-    "origin-ordered-imports": [ true, "one-blank-line" ]
+    "origin-ordered-imports": [ true, "one-blank-line" ],
+    "no-default-import": true,
+    "object-literal-sort-keys": true
   }
 }

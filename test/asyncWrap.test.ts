@@ -1,6 +1,7 @@
 import WebSocket from 'ws'
 import { strict as assert } from 'assert'
 import getPort from 'get-port'
+
 import { asyncWrapWss, asyncWrapWs } from '../lib/helpers/asyncWrap'
 
 describe('asyncWrap', function() {

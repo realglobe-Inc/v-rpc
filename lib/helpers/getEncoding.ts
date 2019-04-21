@@ -1,7 +1,7 @@
 const SupportedContentTypes = {
-  TEXT: 'text/plain',
-  JSON: 'application/json',
   BINARY: 'application/octet-stream',
+  JSON: 'application/json',
+  TEXT: 'text/plain',
 }
 
 export const getEncoding = (contentTypeString: string) => {

@@ -1,4 +1,5 @@
 import WebSocket from 'ws'
+
 import { asyncWrapWs } from './asyncWrap'
 import { Payload, encodePayload } from '../core/Payload'
 

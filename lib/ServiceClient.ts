@@ -1,4 +1,5 @@
 import WebSocket from 'ws'
+
 import { asyncWrapWs } from './helpers/asyncWrap'
 import { isRequestPayload, decodePayload } from './core/Payload'
 import {
@@ -60,8 +61,8 @@ export class ServiceClient {
       const result = await this.method(arg)
       await payloadWrap(ws).sendPayload({
         id: payload.id,
-        type: 'res',
         payload: result,
+        type: 'res',
       })
     })
     this.ws = ws

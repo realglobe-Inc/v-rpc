@@ -1,10 +1,11 @@
 import WebSocket from 'ws'
 import wait from 'waait'
 import { strict as assert } from 'assert'
-import { ServiceForwarder } from '../lib/core/ServiceForwarder'
 import getPort from 'get-port'
 import uuid from 'uuid'
 import http from 'http'
+
+import { ServiceForwarder } from '../lib/core/ServiceForwarder'
 import { asyncWrapWs, asyncHttp } from '../lib/helpers/asyncWrap'
 import {
   ResponsePayload,
@@ -43,8 +44,8 @@ describe('WsForwardServer', function() {
     ws.on('message', (message: Buffer) => {
       const resp: ResponsePayload = {
         id: decodePayload(message)!.id,
-        type: 'res',
         payload: 'world',
+        type: 'res',
       }
       ws.send(encodePayload(resp))
     })
@@ -56,14 +57,14 @@ describe('WsForwardServer', function() {
 
     const request: RequestPayload = {
       id: uuid(),
-      type: 'req',
       payload: 'hello',
+      type: 'req',
     }
     const resp = await forwarder.serviceStore.get('service01').call(request)
     assert.deepStrictEqual(resp, {
       id: request.id,
-      type: 'res',
       payload: 'world',
+      type: 'res',
     })
   })
 })
