@@ -18,6 +18,7 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
+      connectionRetryEnabled: false,
       method: (arg: string) => Promise.resolve(arg + arg),
       serviceId,
       url: `http://localhost:${port}`,
@@ -42,6 +43,7 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
+      connectionRetryEnabled: false,
       method: (arg: Buffer) => {
         assert.ok(Buffer.isBuffer(arg))
         return Promise.resolve(arg)
@@ -85,6 +87,7 @@ describe('all', function() {
 
     {
       const service = new ServiceClient({
+        connectionRetryEnabled: false,
         method: (arg: string) => Promise.resolve(arg),
         serviceId: 'service01',
         url: `http://localhost:${port}`,
@@ -94,6 +97,7 @@ describe('all', function() {
 
     {
       const service = new ServiceClient({
+        connectionRetryEnabled: false,
         headers: {
           Authorization: 'Bearer xxxxxx',
         },
@@ -119,6 +123,7 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
+      connectionRetryEnabled: false,
       method: async (data: Buffer) => {
         const decoded = HelloRequest.decode(data)
         const request = HelloRequest.toObject(decoded)
@@ -160,6 +165,7 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
+      connectionRetryEnabled: false,
       method: async (data: string) => {
         const { method, id } = JSON.parse(data)
         if (method === 'hello') {
@@ -246,6 +252,7 @@ describe('all', function() {
 
     const serviceId = 'service01'
     const service = new ServiceClient({
+      connectionRetryEnabled: false,
       method: () =>
         new Promise((resolve) => setTimeout(() => resolve('a'), 10000).unref()),
       serviceId,

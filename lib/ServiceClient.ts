@@ -1,4 +1,5 @@
 import WebSocket from 'ws'
+import Debug from 'debug'
 
 import { asyncWrapWs } from './helpers/asyncWrap'
 import { isRequestPayload, decodePayload } from './core/Payload'
@@ -8,6 +9,9 @@ import {
 } from './core/Constants'
 import { wsConnectionDetector } from './helpers/wsConnectDetector'
 import { payloadWrap } from './helpers/payloadWrap'
+import { notNormalClosureCode } from './helpers/wsClosureCode'
+
+const debug = Debug('v-rpc:ServiceClient')
 
 export type ServiceMethod = (
   arg: string | Buffer,
@@ -20,6 +24,8 @@ export class ServiceClient {
   headers?: { [key: string]: string }
   timeout?: number
   private ws: WebSocket
+  private connectionRetryEnabled = true
+  private connectionRetryInterval = 5000
 
   constructor({
     url,
@@ -27,21 +33,37 @@ export class ServiceClient {
     method,
     headers,
     timeout,
+    connectionRetryEnabled = true,
   }: {
     url: string
     serviceId: string
     method: ServiceMethod
     headers?: { [key: string]: string }
     timeout?: number
+    connectionRetryEnabled?: boolean
   }) {
     this.url = url
     this.serviceId = serviceId
     this.method = method
     this.headers = headers
     this.timeout = timeout
+    this.connectionRetryEnabled = connectionRetryEnabled
   }
 
   async connect() {
+    if (this.ws) {
+      this.ws.close(1000)
+    }
+    this.ws = this.createWs()
+    await asyncWrapWs(this.ws).waitOpen()
+    debug(`WebSocket connected`)
+  }
+
+  close() {
+    this.ws.close(1000)
+  }
+
+  private createWs() {
     const ws = new WebSocket(this.url, {
       headers: {
         [SERVICE_ID_HEADER_NAME]: this.serviceId,
@@ -65,11 +87,21 @@ export class ServiceClient {
         type: 'res',
       })
     })
-    this.ws = ws
-    await asyncWrapWs(ws).waitOpen()
+    ws.on('close', (code) => {
+      if (notNormalClosureCode(code) && this.connectionRetryEnabled) {
+        this.retryConnect()
+      }
+    })
+    ws.on('error', (err) => {
+      console.error(err)
+    })
+    return ws
   }
 
-  close() {
-    this.ws.close()
+  private retryConnect() {
+    debug(`Retry to connect after ${this.connectionRetryInterval} ms`)
+    setTimeout(() => {
+      void this.connect()
+    }, this.connectionRetryInterval)
   }
 }
