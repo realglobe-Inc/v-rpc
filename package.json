@@ -54,7 +54,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "postinstall": "npm run build",
-    "test": "mocha -r ts-node/register test/**/*.test.ts"
+    "prepare": "npm run build",
+    "test": "mocha -r ts-node/register test/**/*.test.ts",
+    "example:server": "ts-node example/server.ts",
+    "example:service": "ts-node example/service.ts"
   }
 }

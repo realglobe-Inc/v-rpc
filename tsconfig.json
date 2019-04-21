@@ -17,7 +17,8 @@
   ],
   "include": [
     "lib",
-    "test"
+    "test",
+    "example"
   ],
   "types": [
     "mocha"
