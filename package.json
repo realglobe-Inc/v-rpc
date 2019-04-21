@@ -49,6 +49,7 @@
   ],
   "license": "MIT",
   "main": "shim/lib",
+  "types": "shim/lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/realglobe-Inc/v-rpc.git"

@@ -12,7 +12,8 @@
     "incremental": true,
     "removeComments": false,
     "forceConsistentCasingInFileNames": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "declaration": true
   },
   "exclude": [
     "node_modules",
