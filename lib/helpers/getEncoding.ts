@@ -6,6 +6,7 @@ const SupportedContentTypes = {
 
 export const getEncoding = (contentTypeString: string) => {
   const [contentType, parameter] = contentTypeString
+    .toLowerCase()
     .split(';')
     .map((s) => s.trim())
 

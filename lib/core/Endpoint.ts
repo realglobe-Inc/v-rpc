@@ -4,6 +4,7 @@ import { Context } from 'koa'
 import { ServiceForwarder } from './ServiceForwarder'
 import { RequestPayload } from './Payload'
 import { getEncoding } from '../helpers/getEncoding'
+import { DEFAULT_SERVICE_TIMEOUT } from './Constants'
 
 export const createEndpoints = (forwarder: ServiceForwarder) => ({
   checkService: async (ctx: Context) => {
@@ -24,6 +25,9 @@ export const createEndpoints = (forwarder: ServiceForwarder) => ({
       ctx.body = 'Service not found'
       return
     }
+    ctx.request.socket.setTimeout(
+      serviceProxy.options.timeout || DEFAULT_SERVICE_TIMEOUT,
+    )
 
     const hasContentType = getEncoding(ctx.headers['content-type'])
     if (!hasContentType) {

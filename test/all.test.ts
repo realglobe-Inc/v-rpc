@@ -237,4 +237,29 @@ describe('all', function() {
 
     await server.close()
   })
+
+  it('service timeout', async () => {
+    const server = new ForwardServer()
+    const port = await getPort()
+    await server.listen(port)
+
+    const serviceId = 'service01'
+    const service = new ServiceClient({
+      url: `http://localhost:${port}`,
+      serviceId,
+      method: () =>
+        new Promise((resolve) => setTimeout(() => resolve('a'), 10000).unref()),
+      timeout: 10,
+    })
+    await service.connect()
+
+    await assert.rejects(() =>
+      fetch(`http://localhost:${port}/services/${serviceId}`, {
+        method: 'POST',
+        body: 'hello',
+      }),
+    )
+
+    await server.close()
+  })
 })

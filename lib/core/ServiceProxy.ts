@@ -2,29 +2,33 @@ import WebSocket from 'ws'
 import {
   RequestPayload,
   ResponsePayload,
-  encodePayload,
   decodePayload,
   isResponsePayload,
 } from './Payload'
-import { asyncWrapWs } from '../helpers/asyncWrap'
 import { payloadWrap } from '../helpers/payloadWrap'
 
 export interface ServiceProxy {
   id: string
   call: (arg: RequestPayload) => Promise<ResponsePayload>
+  options: {
+    timeout?: number
+  }
 }
 
 export class WsServiceProxy implements ServiceProxy {
   id: string
   ws: WebSocket
+  options: ServiceProxy['options']
 
-  constructor(id: string, ws: WebSocket) {
+  constructor(id: string, ws: WebSocket, options?: ServiceProxy['options']) {
     this.id = id
     this.ws = ws
+    this.options = options || {}
   }
 
   async call(req: RequestPayload) {
     const { ws } = this
+    // TODO: timeout
     return new Promise(
       (
         resolve: (res: ResponsePayload) => void,

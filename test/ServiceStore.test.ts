@@ -6,6 +6,7 @@ describe('ServiceStore', () => {
   const createService = (): ServiceProxy => ({
     id: '01',
     call: () => null as any,
+    options: {},
   })
   it('works as store', () => {
     const store = new ServiceStore()

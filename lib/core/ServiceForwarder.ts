@@ -4,7 +4,11 @@ import { ServiceStore } from './ServiceStore'
 import { WsServiceProxy } from './ServiceProxy'
 import Debug from 'debug'
 import { Server, IncomingMessage } from 'http'
-import { SERVICE_ID_HEADER_NAME } from './Constants'
+import {
+  SERVICE_ID_HEADER_NAME,
+  SERVICE_TIMEOUT_HEADER_NAME,
+  DEFAULT_SERVICE_TIMEOUT,
+} from './Constants'
 import { wssConnectionDetector } from '../helpers/wsConnectDetector'
 
 const debug = Debug('v-rpc:server')
@@ -40,11 +44,16 @@ export class ServiceForwarder {
 
   private onConnection = async (ws: WebSocket, req: IncomingMessage) => {
     const serviceId = req.headers[SERVICE_ID_HEADER_NAME]
+    const serviceTimeout = req.headers[SERVICE_TIMEOUT_HEADER_NAME]
+      ? Number(req.headers[SERVICE_TIMEOUT_HEADER_NAME])
+      : undefined
     if (!serviceId || typeof serviceId !== 'string') {
       ws.terminate()
       return
     }
-    const service = new WsServiceProxy(serviceId, ws)
+    const service = new WsServiceProxy(serviceId, ws, {
+      timeout: serviceTimeout,
+    })
 
     this.serviceStore.set(service)
 
