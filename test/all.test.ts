@@ -151,4 +151,90 @@ describe('all', function() {
 
     await server.close()
   })
+
+  it('json rpc example', async () => {
+    const server = new ForwardServer()
+    const port = await getPort()
+    await server.listen(port)
+
+    const serviceId = 'service01'
+    const service = new ServiceClient({
+      url: `http://localhost:${port}`,
+      serviceId,
+      method: async (data: string) => {
+        const { method, id } = JSON.parse(data)
+        if (method === 'hello') {
+          return JSON.stringify({
+            jsonrpc: '2.0',
+            id,
+            result: 'world',
+          })
+        } else {
+          return JSON.stringify({
+            jsonrpc: '2.0',
+            id,
+            error: {
+              code: -32601,
+              message: 'Method not found',
+            },
+          })
+        }
+      },
+    })
+    await service.connect()
+
+    {
+      const resp = await fetch(
+        `http://localhost:${port}/services/${serviceId}`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'hello',
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      const json = await resp.json()
+      assert.strictEqual(json.result, 'world')
+    }
+    {
+      const resp = await fetch(
+        `http://localhost:${port}/services/${serviceId}`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: 2,
+            method: 'notFoundMethod',
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      const json = await resp.json()
+      assert.strictEqual(json.error.code, -32601)
+    }
+
+    await server.close()
+  })
+
+  it('service not found', async () => {
+    const server = new ForwardServer()
+    const port = await getPort()
+    await server.listen(port)
+
+    const resp = await fetch(`http://localhost:${port}/services/service0000`, {
+      method: 'POST',
+      body: 'hello',
+    })
+    assert.ok(!resp.ok)
+    assert.strictEqual(resp.status, 404)
+
+    await server.close()
+  })
 })
