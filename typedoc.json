@@ -1,0 +1,11 @@
+{
+  "theme": "markdown",
+  "out": "doc",
+  "exclude": [
+    "test/*",
+    "example/*",
+    "lib/core/*",
+    "lib/helpers/*"
+  ],
+  "readme": "none"
+}
