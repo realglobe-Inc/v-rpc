@@ -4,6 +4,7 @@ import Router from 'koa-router'
 import { ServiceForwarder, VerifyService } from './core/ServiceForwarder'
 import { createEndpoints } from './core/Endpoint'
 import { asyncHttp } from './helpers/asyncWrap'
+import { Routes } from './core/Constants'
 
 export class ForwardServer {
   http: http.Server
@@ -34,8 +35,8 @@ export class ForwardServer {
   private createRoutes() {
     const router = new Router()
     const endpoints = createEndpoints(this.forwarder)
-    router.get('/services/:serviceId', endpoints.checkService)
-    router.post('/services/:serviceId', endpoints.callServiceMethod)
+    router.get(Routes.SERVICE, endpoints.checkService)
+    router.post(Routes.SERVICE, endpoints.callServiceMethod)
     return router.routes()
   }
 }
