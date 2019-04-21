@@ -1,0 +1,30 @@
+.git/
+
+# for WebStorm
+.idea/
+
+# for npm
+node_modules/
+npm-shrinkwrap.json
+package-lock.json
+
+lib/
+
+# codes
+test/
+
+# misc
+example/
+.gitignore
+.editorconfig
+.travis.yml
+tslint.json
+tsconfig.json
+.prettierrc.yml
+
+npm-debug.log
+
+# shim
+shim/example/
+shim/test/
+shim/tsconfig.tsbuildinfo
