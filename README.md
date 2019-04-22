@@ -7,13 +7,13 @@ RPC forwarding server. `v-rpc` makes your local function public RPC method.
 Install v-rpc.
 
 ```
-$ npm install v-rpc
+$ npm install @v-tools/v-rpc
 ```
 
 Server code.
 
 ```js
-const { ForwardServer } = require('v-rpc')
+const { ForwardServer } = require('@v-tools/v-rpc')
 
 const server = new ForwardServer()
 
@@ -25,7 +25,7 @@ void server.listen(5000).then(() => {
 Service client code.
 
 ```js
-const { ServiceClient } = require('v-rpc')
+const { ServiceClient } = require('@v-tools/v-rpc')
 
 const publicMethod = (name: string) => 'Hello ' + name + '\n'
 
