@@ -1,4 +1,4 @@
-[v-rpc](../README.md) > ["ForwardServer"](../modules/_forwardserver_.md)
+[@v-tools/v-rpc](../README.md) > ["ForwardServer"](../modules/_forwardserver_.md)
 
 # External module: "ForwardServer"
 

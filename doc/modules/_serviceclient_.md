@@ -1,4 +1,4 @@
-[v-rpc](../README.md) > ["ServiceClient"](../modules/_serviceclient_.md)
+[@v-tools/v-rpc](../README.md) > ["ServiceClient"](../modules/_serviceclient_.md)
 
 # External module: "ServiceClient"
 
@@ -12,6 +12,10 @@
 
 * [ServiceMethod](_serviceclient_.md#servicemethod)
 
+### Variables
+
+* [debug](_serviceclient_.md#debug)
+
 ---
 
 ## Type aliases
@@ -22,7 +26,7 @@
 
 **Ƭ ServiceMethod**: *`function`*
 
-*Defined in ServiceClient.ts:12*
+*Defined in ServiceClient.ts:16*
 
 #### Type declaration
 ▸(arg: *`string` \| `Buffer`*): `Promise`<`string` \| `Buffer`> \| `string` \| `Buffer`
@@ -34,6 +38,18 @@
 | arg | `string` \| `Buffer` |
 
 **Returns:** `Promise`<`string` \| `Buffer`> \| `string` \| `Buffer`
+
+___
+
+## Variables
+
+<a id="debug"></a>
+
+### `<Const>` debug
+
+**● debug**: *`Debugger`* =  Debug('v-rpc:ServiceClient')
+
+*Defined in ServiceClient.ts:14*
 
 ___
 

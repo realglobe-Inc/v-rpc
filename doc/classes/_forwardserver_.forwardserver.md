@@ -1,4 +1,4 @@
-[v-rpc](../README.md) > ["ForwardServer"](../modules/_forwardserver_.md) > [ForwardServer](../classes/_forwardserver_.forwardserver.md)
+[@v-tools/v-rpc](../README.md) > ["ForwardServer"](../modules/_forwardserver_.md) > [ForwardServer](../classes/_forwardserver_.forwardserver.md)
 
 # Class: ForwardServer
 

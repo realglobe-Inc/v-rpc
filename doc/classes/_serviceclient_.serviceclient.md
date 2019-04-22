@@ -1,4 +1,4 @@
-[v-rpc](../README.md) > ["ServiceClient"](../modules/_serviceclient_.md) > [ServiceClient](../classes/_serviceclient_.serviceclient.md)
+[@v-tools/v-rpc](../README.md) > ["ServiceClient"](../modules/_serviceclient_.md) > [ServiceClient](../classes/_serviceclient_.serviceclient.md)
 
 # Class: ServiceClient
 
@@ -14,6 +14,8 @@
 
 ### Properties
 
+* [connectionRetryEnabled](_serviceclient_.serviceclient.md#connectionretryenabled)
+* [connectionRetryInterval](_serviceclient_.serviceclient.md#connectionretryinterval)
 * [headers](_serviceclient_.serviceclient.md#headers)
 * [method](_serviceclient_.serviceclient.md#method)
 * [serviceId](_serviceclient_.serviceclient.md#serviceid)
@@ -25,6 +27,8 @@
 
 * [close](_serviceclient_.serviceclient.md#close)
 * [connect](_serviceclient_.serviceclient.md#connect)
+* [createWs](_serviceclient_.serviceclient.md#createws)
+* [retryConnect](_serviceclient_.serviceclient.md#retryconnect)
 
 ---
 
@@ -36,19 +40,20 @@
 
 ⊕ **new ServiceClient**(__namedParameters: *`object`*): [ServiceClient](_serviceclient_.serviceclient.md)
 
-*Defined in ServiceClient.ts:22*
+*Defined in ServiceClient.ts:28*
 
 **Parameters:**
 
 **__namedParameters: `object`**
 
-| Name | Type |
-| ------ | ------ |
-| headers | `undefined` \| `object` |
-| method | `function` |
-| serviceId | `string` |
-| timeout | `undefined` \| `number` |
-| url | `string` |
+| Name | Type | Default value |
+| ------ | ------ | ------ |
+| connectionRetryEnabled | `boolean` | true |
+| headers | `undefined` \| `object` | - |
+| method | `function` | - |
+| serviceId | `string` | - |
+| timeout | `undefined` \| `number` | - |
+| url | `string` | - |
 
 **Returns:** [ServiceClient](_serviceclient_.serviceclient.md)
 
@@ -56,13 +61,31 @@ ___
 
 ## Properties
 
+<a id="connectionretryenabled"></a>
+
+### `<Private>` connectionRetryEnabled
+
+**● connectionRetryEnabled**: *`boolean`* = true
+
+*Defined in ServiceClient.ts:27*
+
+___
+<a id="connectionretryinterval"></a>
+
+### `<Private>` connectionRetryInterval
+
+**● connectionRetryInterval**: *`number`* = 5000
+
+*Defined in ServiceClient.ts:28*
+
+___
 <a id="headers"></a>
 
 ### `<Optional>` headers
 
 **● headers**: *`undefined` \| `object`*
 
-*Defined in ServiceClient.ts:20*
+*Defined in ServiceClient.ts:24*
 
 ___
 <a id="method"></a>
@@ -71,7 +94,7 @@ ___
 
 **● method**: *[ServiceMethod](../modules/_serviceclient_.md#servicemethod)*
 
-*Defined in ServiceClient.ts:19*
+*Defined in ServiceClient.ts:23*
 
 ___
 <a id="serviceid"></a>
@@ -80,7 +103,7 @@ ___
 
 **● serviceId**: *`string`*
 
-*Defined in ServiceClient.ts:18*
+*Defined in ServiceClient.ts:22*
 
 ___
 <a id="timeout"></a>
@@ -89,7 +112,7 @@ ___
 
 **● timeout**: *`undefined` \| `number`*
 
-*Defined in ServiceClient.ts:21*
+*Defined in ServiceClient.ts:25*
 
 ___
 <a id="url"></a>
@@ -98,7 +121,7 @@ ___
 
 **● url**: *`string`*
 
-*Defined in ServiceClient.ts:17*
+*Defined in ServiceClient.ts:21*
 
 ___
 <a id="ws"></a>
@@ -107,7 +130,7 @@ ___
 
 **● ws**: *`WebSocket`*
 
-*Defined in ServiceClient.ts:22*
+*Defined in ServiceClient.ts:26*
 
 ___
 
@@ -119,7 +142,7 @@ ___
 
 ▸ **close**(): `void`
 
-*Defined in ServiceClient.ts:72*
+*Defined in ServiceClient.ts:62*
 
 **Returns:** `void`
 
@@ -130,9 +153,31 @@ ___
 
 ▸ **connect**(): `Promise`<`void`>
 
-*Defined in ServiceClient.ts:44*
+*Defined in ServiceClient.ts:53*
 
 **Returns:** `Promise`<`void`>
+
+___
+<a id="createws"></a>
+
+### `<Private>` createWs
+
+▸ **createWs**(): `WebSocket`
+
+*Defined in ServiceClient.ts:66*
+
+**Returns:** `WebSocket`
+
+___
+<a id="retryconnect"></a>
+
+### `<Private>` retryConnect
+
+▸ **retryConnect**(): `void`
+
+*Defined in ServiceClient.ts:101*
+
+**Returns:** `void`
 
 ___
 

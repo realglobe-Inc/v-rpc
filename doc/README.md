@@ -1,5 +1,5 @@
 
-#  v-rpc
+#  @v-tools/v-rpc
 
 ## Index
 
