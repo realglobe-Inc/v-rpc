@@ -46,7 +46,7 @@ export const createEndpoints = (forwarder: ServiceForwarder) => ({
     const serviceId = ctx.params.serviceId as string
     if (forwarder.serviceStore.has(serviceId)) {
       ctx.status = 200
-      ctx.body = 'available'
+      ctx.body = `Service "${serviceId}" is available`
     } else {
       ctx.status = 404
       ctx.body = 'Service not found'

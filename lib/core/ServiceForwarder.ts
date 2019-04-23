@@ -11,7 +11,7 @@ import {
 import { WsServiceProxy } from './ServiceProxy'
 import { wssConnectionDetector } from '../helpers/wsConnectDetector'
 
-const debug = Debug('v-rpc:server')
+const debug = Debug('v-rpc:ServiceForwarder')
 
 export type VerifyService = (req: IncomingMessage) => boolean | Promise<boolean>
 
@@ -48,9 +48,11 @@ export class ServiceForwarder {
       ? Number(req.headers[SERVICE_TIMEOUT_HEADER_NAME])
       : undefined
     if (!serviceId || typeof serviceId !== 'string') {
+      debug(`Web socket terminates for service ID is not given`)
       ws.terminate()
       return
     }
+    debug(`Service "${serviceId}" connected`)
     const service = new WsServiceProxy(serviceId, ws, {
       timeout: serviceTimeout,
     })
@@ -58,11 +60,11 @@ export class ServiceForwarder {
     this.serviceStore.set(service)
 
     ws.on('error', (err) => {
-      debug('web socket error', err)
+      console.error('web socket error', err)
     })
 
     ws.on('close', (code: number, reason: string) => {
-      debug(`web socket closed: code = ${code}, reason = ${reason}`)
+      debug(`Service "${serviceId}" gone: code=${code}, reason=${reason}`)
       this.serviceStore.del(service.id)
     })
   }

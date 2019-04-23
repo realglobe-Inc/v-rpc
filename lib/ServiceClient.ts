@@ -56,7 +56,7 @@ export class ServiceClient {
     }
     this.ws = this.createWs()
     await asyncWrapWs(this.ws).waitOpen()
-    debug(`WebSocket connected`)
+    debug(`Service "${this.serviceId}" connected to the server`)
   }
 
   close() {
@@ -75,10 +75,13 @@ export class ServiceClient {
     })
     wsConnectionDetector(ws)
     ws.on('message', async (message: any) => {
+      debug(`Message received from server`)
       const payload = decodePayload(message)
       if (!payload || !isRequestPayload(payload)) {
+        debug(`Received message is invalid`)
         return
       }
+      debug(`Received requset id="${payload.id}"`)
       const { payload: arg } = payload
       const result = await this.method(arg)
       await payloadWrap(ws).sendPayload({
@@ -86,6 +89,7 @@ export class ServiceClient {
         payload: result,
         type: 'res',
       })
+      debug(`Sended response for request id="${payload.id}"`)
     })
     ws.on('close', (code) => {
       if (notNormalClosureCode(code) && this.connectionRetryEnabled) {

@@ -28,7 +28,7 @@ describe('WsServiceProxy', function() {
     wss.close()
   })
 
-  it('sends request and recieves response on call()', async () => {
+  it('sends request and receives response on call()', async () => {
     const ws = new WebSocket(`http://localhost:${port}`)
     ws.on('message', (message: Buffer) => {
       const resp: ResponsePayload = {
