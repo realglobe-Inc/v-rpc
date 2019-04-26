@@ -11,6 +11,12 @@
     "url": "https://github.com/realglobe-Inc/v-rpc/issues"
   },
   "dependencies": {
+    "@types/debug": "^4.1.4",
+    "@types/koa": "^2.0.48",
+    "@types/koa-router": "^7.0.40",
+    "@types/msgpack-lite": "^0.1.6",
+    "@types/uuid": "^3.4.4",
+    "@types/ws": "^6.0.1",
     "debug": "^4.1.1",
     "koa": "^2.7.0",
     "koa-router": "^7.4.0",
@@ -20,15 +26,9 @@
     "ws": "^6.2.1"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.4",
     "@types/get-port": "^4.2.0",
-    "@types/koa": "^2.0.48",
-    "@types/koa-router": "^7.0.40",
     "@types/mocha": "^5.2.6",
-    "@types/msgpack-lite": "^0.1.6",
     "@types/node-fetch": "^2.3.2",
-    "@types/uuid": "^3.4.4",
-    "@types/ws": "^6.0.1",
     "get-port": "^5.0.0",
     "mocha": "^6.1.4",
     "node-fetch": "^2.3.0",
@@ -51,7 +51,6 @@
   ],
   "license": "MIT",
   "main": "shim/lib",
-  "types": "shim/lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/realglobe-Inc/v-rpc.git"
@@ -59,9 +58,10 @@
   "scripts": {
     "build": "tsc",
     "doc": "typedoc",
-    "prepare": "npm run build && npm run doc",
-    "test": "mocha -r ts-node/register test/**/*.test.ts",
     "example:server": "ts-node example/server.ts",
-    "example:service": "ts-node example/service.ts"
-  }
+    "example:service": "ts-node example/service.ts",
+    "prepare": "npm run build && npm run doc",
+    "test": "mocha -r ts-node/register test/**/*.test.ts"
+  },
+  "types": "shim/lib/index.d.ts"
 }
