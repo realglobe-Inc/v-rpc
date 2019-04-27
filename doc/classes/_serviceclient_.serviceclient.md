@@ -175,7 +175,7 @@ ___
 
 ▸ **retryConnect**(): `void`
 
-*Defined in ServiceClient.ts:101*
+*Defined in ServiceClient.ts:105*
 
 **Returns:** `void`
 

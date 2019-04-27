@@ -61,6 +61,8 @@ export class ServiceForwarder {
 
     ws.on('error', (err) => {
       console.error('web socket error', err)
+      ws.terminate()
+      this.serviceStore.del(service.id)
     })
 
     ws.on('close', (code: number, reason: string) => {
