@@ -61,7 +61,7 @@
     "doc": "typedoc",
     "example:server": "ts-node example/server.ts",
     "example:service": "ts-node example/service.ts",
-    "prepare": "npm run build && npm run doc",
+    "prepare": "npm run build",
     "test": "mocha -r ts-node/register test/**/*.test.ts"
   },
   "types": "shim/lib/index.d.ts"
