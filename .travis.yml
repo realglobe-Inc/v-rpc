@@ -2,5 +2,7 @@ language: node_js
 node_js:
 - '10'
 cache: npm
-before_install: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+before_install:
+  - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+  - npm i -g publish-if-needed
 after_success: publish-if-needed
