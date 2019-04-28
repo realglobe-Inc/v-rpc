@@ -10,5 +10,5 @@ deploy:
   on:
     repo: realglobe-Inc/v-rpc
     branch: master
-    script: publish-if-needed
     skip_cleanup: true
+  script: publish-if-needed
