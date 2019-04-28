@@ -2,12 +2,5 @@ language: node_js
 node_js:
 - '10'
 cache: npm
-deploy:
-  provider: npm
-  email: oss@realglobe.jp
-  api_key:
-    secure: wc7ISHoDlpeRf98RW7H1+wAtZUhUiIpFjtEW3EsqU2i5f5wAkkbrmhMxe10STpW/aIFWe8Q48K8R8uiQGlq1vB5Luw+Ipc7VIrre5M2Qqgqb1AQ4t6PdzxuE6GDAOxFPsBYrz9tYT0PnhAgwkE8c8E/JMb8dN9ziuJkI8u5Q3yUDgwu3HkKafuFT2HYYF4FaYqb1b6hMw8oCNsRAkNtuulDUlNQ+eR+0MQZdspNFu87NZeBy5xBtnrcE1rJmCQ16v5kx2JwXYKOLr2qhAuamq4prXjMgMfyzaseiVL88km0bzRFXKyxqkTzpcBPpvH77RtcJi0jl07G+zDVeE2l64uwFoEJGQYjMBPYIP1WTW+Fctj6voNW+HnWgG4pZv3GzQUYAZt55W3v5lS1fBP00T4m2DbM4EAhLgKmCTdc+h4CjUs77Qi62nCylmAtD+EpkfLkmb6n3GwQs8x6aOE6YyndRbuu93qud2z+z1/44TC5OJHc1vP9oovPf93UBaFL+8c4z5KkBu50NWKxfocsEA8dARYQqBHzadIlJTzGx2C+OwvZRlv4KZjsttCeFuAeKUBmVQctOhs7V/7HjO43tcmQo0Ix53jWeonm8T0uQh0sIDadENIpDAQv0/nL+zVfpr+XsOwNeafjVjXhPBhBUm9heHvaEQ3EXNSQo4hA6t2w=
-  on:
-    repo: realglobe-Inc/v-rpc
-    branch: master
-  skip_cleanup: true
+before_install: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+after_success: publish-if-needed
