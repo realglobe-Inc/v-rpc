@@ -8,7 +8,6 @@ deploy:
   api_key:
     secure: aDfEbALVVyVFotQmTfZtjzR/n60dmCRAdCEjQrmT4JkJoXif00Yb811J7qmJYxqxA32uYEwdEL8m8b5+Yd4LALn02O69jmoxJhdiuGcweK4ONdbuNFVAnZZngm1UlF4gIzrdo0Wi3epzDIB/nPOTw5tZ/tAKmXuJZujIKvJBjTi6lrpBuMGnuu8eFfz41sLU7KVg9RX23gRAKbNQLNTv+zV5mLcW9+Urs5GYZR0ddYTCpQrq8wrmertfM5dOCczPKlJHq6pozMK2PlQ3iQKkQJ3L6JNV6G8JCzOZwm0aIUvvPeX7FH7h7p7G2wcJ3aJ+gzFv9puWZA5VZnE9ht6XHUJ5ff4J5SCVK+GAQ8FX2FskIe8Tvf0F5CS++QRURKCutZVcSuUSVj2keUNQgxKSQjCzaUfgDIB9RiZ0tpPl4zK6In+2lgBxePtueM8EXyQdEwyyM+PZueyO/WVciMiXOpNk1FxuYf+6HTHqDD42BRARxWCX9kpDoGEnuxQ8fVLz/p/NHO0ckxP/SY6Tvat9BKPhFI0JN7Zv2hlhGtOb8XAft+4C3o6t93Q0Z9gj/Uu6A7iUUtu328hLJ/jAvmU3+T9ddjWBlKcsHmDr8Smk6V3GuO1gWgabp2/3P+krvsxl0ALuyAb60wCqyIuouhEZzZlivycKmd564R/0lF/DI+c=
   on:
-    tags: true
     repo: realglobe-Inc/v-rpc
     branch: master
-    skip_cleanup: true
+    script: publish-if-needed
