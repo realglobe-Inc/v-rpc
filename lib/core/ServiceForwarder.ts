@@ -83,6 +83,10 @@ export class ServiceForwarder {
       cb(false, 400, `Header "${SERVICE_ID_HEADER_NAME}" not given`)
       return
     }
+    if (this.serviceStore.has(serviceId)) {
+      cb(false, 400, `Service "${serviceId}" is already connected`)
+      return
+    }
 
     try {
       const ok = await verifyService(info.req)

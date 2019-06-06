@@ -67,4 +67,26 @@ describe('WsForwardServer', function() {
       type: 'res',
     })
   })
+
+  it('rejects duplicated service ID', async () => {
+    const ws1 = new WebSocket(`http://localhost:${port}`, {
+      headers: {
+        [SERVICE_ID_HEADER_NAME]: 'service02',
+      },
+    })
+    await asyncWrapWs(ws1).waitOpen()
+
+    await wait(10)
+
+    const ws2 = new WebSocket(`http://localhost:${port}`, {
+      headers: {
+        [SERVICE_ID_HEADER_NAME]: 'service02',
+      },
+    })
+    await assert.rejects(() => asyncWrapWs(ws2).waitOpen())
+
+    await wait(10)
+
+    assert.ok(forwarder.serviceStore.has('service02'))
+  })
 })
