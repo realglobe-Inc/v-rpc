@@ -1,7 +1,8 @@
 import WebSocket from 'ws'
 
-import { asyncWrapWs } from './asyncWrap'
 import { Payload, encodePayload } from '../core/Payload'
+
+import { asyncWrapWs } from './asyncWrap'
 
 export const payloadWrap = (ws: WebSocket) => ({
   sendPayload: (payload: Payload) =>

@@ -1,10 +1,12 @@
 import uuid from 'uuid'
+// eslint-disable-next-line import/default
 import getRawBody from 'raw-body'
 import { Context } from 'koa'
 
+import { getEncoding } from '../helpers/getEncoding'
+
 import { ServiceForwarder } from './ServiceForwarder'
 import { RequestPayload } from './Payload'
-import { getEncoding } from '../helpers/getEncoding'
 import { DEFAULT_SERVICE_TIMEOUT } from './Constants'
 
 export const createEndpoints = (forwarder: ServiceForwarder) => ({

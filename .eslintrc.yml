@@ -1,0 +1,19 @@
+extends:
+  - plugin:@typescript-eslint/recommended
+  - plugin:@typescript-eslint/eslint-recommended
+  - plugin:prettier/recommended
+  - prettier/@typescript-eslint
+  - plugin:import/errors
+  - plugin:import/warnings
+  - plugin:import/typescript
+parser: "@typescript-eslint/parser"
+plugins:
+  - "@typescript-eslint"
+  - import
+rules:
+  "import/no-default-export": "error"
+  "import/no-default-import": 0
+  "import/order": ["error", {"newlines-between": "always"}]
+  "@typescript-eslint/no-explicit-any": off
+  "@typescript-eslint/explicit-function-return-type": off
+  "@typescript-eslint/explicit-member-accessibility": off

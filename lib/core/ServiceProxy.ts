@@ -1,13 +1,14 @@
 import WebSocket from 'ws'
 import Debug from 'debug'
 
+import { payloadWrap } from '../helpers/payloadWrap'
+
 import {
   RequestPayload,
   ResponsePayload,
   decodePayload,
   isResponsePayload,
 } from './Payload'
-import { payloadWrap } from '../helpers/payloadWrap'
 
 const debug = Debug('v-rpc:ServiceProxy')
 
@@ -52,9 +53,7 @@ export class WsServiceProxy implements ServiceProxy {
           const isResponse = payload.type === 'res' && payload.id === req.id
           if (isResponse) {
             debug(
-              `Received resposne for request id="${
-                req.id
-              }" from service "${serviceId}"`,
+              `Received resposne for request id="${req.id}" from service "${serviceId}"`,
             )
             ws.removeListener('message', onMessage)
             resolve(payload)

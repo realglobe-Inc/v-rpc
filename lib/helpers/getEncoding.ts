@@ -20,6 +20,7 @@ export const getEncoding = (contentTypeString: string) => {
       contentType === SupportedContentTypes.JSON
     ) {
       if (parameter && parameter.includes('charset=')) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const charset = parameter.match(/charset=([A-Za-z0-9_-]+)/)![1]
         return charset
       } else {

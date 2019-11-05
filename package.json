@@ -29,31 +29,32 @@
     "@types/get-port": "^4.2.0",
     "@types/mocha": "^5.2.7",
     "@types/node-fetch": "^2.5.3",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.0",
     "get-port": "^5.0.0",
     "mocha": "^6.2.2",
     "node-fetch": "^2.6.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.16.4",
     "protobufjs": "^6.8.8",
     "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-config-standard": "^8.0.1",
-    "tslint-origin-ordered-imports-rule": "^1.2.2",
-    "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "^0.15.0",
     "typedoc-plugin-markdown": "^1.2.1",
     "typescript": "^3.6.4",
     "waait": "^1.0.5"
   },
+  "files": [
+    "shim/lib"
+  ],
   "homepage": "https://github.com/realglobe-Inc/v-rpc#readme",
   "keywords": [
     "v"
   ],
   "license": "MIT",
   "main": "shim/lib",
-  "files": [
-    "shim/lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/realglobe-Inc/v-rpc.git"
@@ -63,6 +64,7 @@
     "doc": "typedoc",
     "example:server": "ts-node example/server.ts",
     "example:service": "ts-node example/service.ts",
+    "lint": "eslint lib/**/*.ts",
     "prepare": "npm run build",
     "test": "mocha -r ts-node/register test/**/*.test.ts"
   },

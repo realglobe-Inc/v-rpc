@@ -1,5 +1,6 @@
-import WebSocket from 'ws'
 import { Server, ClientRequest, IncomingMessage } from 'http'
+
+import WebSocket from 'ws'
 
 /**
  * Wrap wss methods as async methods
